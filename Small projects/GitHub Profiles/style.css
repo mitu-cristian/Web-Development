@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,200&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #2a2a72;
+    background-image: linear-gradient(315deg, #2a2a72 0%, #1d0c38 74%);
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 100vh;
+}
+
+input {
+    background-color: #3b2066;
+    border-radius: 10px;
+    padding: 1rem;
+    color: white;
+    border: none;
+    font-family: inherit;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    width: 200px;
+}
+
+.input:focus {
+    outline: none;
+}
+
+.card {
+    background-color: #3b2066;
+    background-image: linear-gradient(315deg, #3b2066 0%, #4c11ac 74%);
+    display: flex;
+    padding: 3rem;
+    border-radius: 20px;
+    width:min-content;
+}
+
+.img-container {
+    padding-top: 2.5rem;
+}
+
+.avatar {
+    border: 10px solid #2a2a72;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+}
+
+.user-info {
+    margin-left: 2rem;
+    color: #eee;
+}
+
+.user-info ul {
+    display: flex;
+    max-width: 300px;
+    list-style-type: none;
+}
+
+.user-info ul li {
+    margin-right: 2rem;
+}
+
+strong, h4 {
+    margin-right: 0.5rem;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    font-weight: 800;
+    color: rgba(238, 238, 238, 0.601);
+}
+
+.repo {
+    color:rgb(255, 252, 248);
+    background-color: #071c6e;
+    text-decoration: none;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-radius: 5px;
+    margin-right: 2.5rem;
+    line-height: 2rem;
+}
