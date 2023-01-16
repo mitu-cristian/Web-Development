@@ -1,0 +1,12 @@
+.welcome {
+    text-align: center;
+}
+
+@media screen and (min-width: 601px) and (max-width: 5000px) {
+    .welcome {
+        display: flex;
+        gap: 40px;
+        justify-content: center;
+        align-items: center;
+    }
+}

@@ -1,0 +1,14 @@
+mat-nav-list {
+    width: 100%;
+}
+
+
+.link a {
+    color: black;
+}
+
+
+#text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+}

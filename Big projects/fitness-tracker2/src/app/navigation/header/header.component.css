@@ -1,0 +1,33 @@
+mat-toolbar {
+    width: 100%;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+a:hover,
+a:active {
+    color: lightgray;
+}
+
+.divFlex {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 50px;
+}
+
+@media screen and (max-width: 600px) {
+    .divFlex {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 601px) and (max-width: 5000px) {
+    .button {
+        display: none;
+    }
+}

@@ -1,0 +1,30 @@
+mat-card-title {
+    padding-top: 20px;
+}
+
+mat-form-field {
+    padding-top: 25px;
+}
+
+.new-training {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+}
+
+mat-card {
+    width: 400px;
+    text-align: center;
+}
+
+button {
+    margin: auto;
+    padding-bottom: 20px;
+}
+
+@media screen and (max-width: 600px) {
+    mat-card {
+        width: 100%;
+    }
+}
