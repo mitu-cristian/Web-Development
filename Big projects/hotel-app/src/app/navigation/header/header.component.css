@@ -1,0 +1,33 @@
+/* Styling the links from the navbar */
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+a:hover,
+a:active {
+    color: orange;
+}
+
+.linksNav {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 50px;
+}
+
+
+/* Desktop PC */
+@media screen and (min-width: 600px) {
+    .button {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 599px) {
+    .linksNav {
+        display: none;
+    }
+}

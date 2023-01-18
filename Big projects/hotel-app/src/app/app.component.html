@@ -1,34 +1,13 @@
 <mat-sidenav-container>
 
+    <!-- The sidenav -->
     <mat-sidenav #sidenav role="navigation">
-        <mat-nav-list class="linksSidenav">
-            <a mat-list-item routerLink="">Sign Up</a>
-            <a mat-list-item routerLink="">Login</a>
-            <a mat-list-item routerLink="">Rooms & Suites</a>
-            <mat-list-item>
-                <button mat-icon-button><span>Log Out</span></button>
-            </mat-list-item>
-        </mat-nav-list>
+        <app-sidenav-list (closeSidenav)="sidenav.close()"></app-sidenav-list>
     </mat-sidenav>
 
+    <!-- The navigation bar -->
     <mat-sidenav-content>
-
-        <mat-toolbar color="primary">
-            <div class="button">
-                <button mat-icon-button (click)="sidenav.toggle()">
-                    <mat-icon>menu</mat-icon>
-                </button>
-            </div>
-
-            <div><a routerLink="">Portman Hotel</a></div>
-
-            <div class="linksNav">
-                <a routerLink="">Sign Up</a>
-                <a routerLink="">Login</a>
-                <a routerLink="">Rooms & Suites</a>
-            </div>
-        </mat-toolbar>
-
+        <app-header (sidenavToggle)="sidenav.toggle()"></app-header>
         <main>
             <router-outlet></router-outlet>
         </main>
