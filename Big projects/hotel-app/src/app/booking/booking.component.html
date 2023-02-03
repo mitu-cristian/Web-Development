@@ -1,0 +1,10 @@
+<mat-tab-group *ngIf="!ongoingBooking">
+    <mat-tab label="Book now!">
+        <app-new-booking (bookingStart)="ongoingBooking = true"></app-new-booking>
+    </mat-tab>
+    <mat-tab label="Previous bookings">
+        <app-past-bookings></app-past-bookings>
+    </mat-tab>
+</mat-tab-group>
+
+<app-current-booking *ngIf="ongoingBooking" (bookingExit)="ongoingBooking = !ongoingBooking"></app-current-booking>

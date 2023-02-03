@@ -1,0 +1,22 @@
+<section>
+    <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+        <mat-form-field>
+            <mat-label>Your email</mat-label>
+            <input type="email" matInput ngModel name="email" email required #pwInput="ngModel">
+            <mat-error *ngIf="pwInput.value.length != 0">Please enter a valid email.</mat-error>
+            <mat-error *ngIf="pwInput.value.length == 0">Field must not be empty.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Your password</mat-label>
+            <input type="password" matInput ngModel name="password" required minlength="8" #pwInput2="ngModel">
+            <mat-hint>Should be at least 8 characters.</mat-hint>
+            <mat-hint align="end"> {{pwInput2.value.length}} / 8</mat-hint>
+        </mat-form-field>
+
+
+        <mat-checkbox ngModel name="agree" required color="primary">Agree to Terms & Conditions.</mat-checkbox>
+
+        <button [disabled]="!f.valid" type="submit" mat-raised-button color="primary">Submit</button>
+    </form>
+</section>
