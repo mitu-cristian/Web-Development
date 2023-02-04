@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from './auth.service';
 
 @Injectable()
@@ -10,18 +10,26 @@ export class AuthGuard implements CanActivate {
     constructor(private authService: AuthService,
         private router: Router) { }
 
-    canActivate(): any {
-        if (this.isAuthenticated() == true)
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any {
+        if (this.isAuthenticated())
             return true;
         else
             this.router.navigate(['/signup']);
     }
 
+    // isAuthenticated() {
+    //     this.authService.isAuth.subscribe((value) => {
+    //         this.isAuth = value;
+    //     })
+    //     console.log("Is it authenticated? " + this.isAuth)
+    //     return this.isAuth;
+    // }
+
     isAuthenticated() {
         this.authService.isAuth.subscribe((value) => {
             this.isAuth = value;
-        })
-        console.log("Is it authenticated? " + this.isAuth)
+        });
+        console.log(this.isAuth);
         return this.isAuth;
     }
 }

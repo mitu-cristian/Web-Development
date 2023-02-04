@@ -1,0 +1,23 @@
+{
+  "availableRooms": [
+    {
+      "name": "Suite Imperiale"
+    },
+    {
+      "name": "Suite Windsor"
+    },
+    {
+      "name": "Suite Vendome"
+    },
+    {
+      "name": "Suite Maria Callas"
+    },
+    {
+      "name": "Grand Deluxe Room"
+    },
+    {
+      "name": "Executive Room"
+    }
+  ],
+  "reservations": []
+}

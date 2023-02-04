@@ -10,7 +10,7 @@
     <div class="linksNav">
         <a routerLink="/signup" *ngIf="!isAuthenticated()">Sign Up</a>
         <a routerLink="/login" *ngIf="!isAuthenticated()">Login</a>
-        <a routerLink="/booking" *ngIf="isAuthenticated()">Rooms & Suites</a>
+        <a routerLink="/booking" *ngIf="isAuthenticated()">Booking</a>
         <a (click)="logout()" *ngIf="isAuthenticated()">Log Out</a>
     </div>
 </mat-toolbar>

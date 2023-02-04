@@ -26,7 +26,7 @@ export class HeaderComponent {
     this.auth.isAuth.subscribe((value) => {
       this.isAuth = value;
     });
-    console.log(this.isAuth);
+    // console.log(this.isAuth);
     return this.isAuth;
   }
 

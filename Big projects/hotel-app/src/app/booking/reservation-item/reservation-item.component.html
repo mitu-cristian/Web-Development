@@ -1,0 +1,12 @@
+<div class="container">
+    <h3>{{reservation.fullName}} <app-button color="{{colorButton}}" text="{{textButton}}"
+            (click)="deleteReservation(reservation)"></app-button>
+    </h3>
+    <div>
+
+        <h4> {{reservation.room}} </h4>
+        <p>Check In: {{reservation.checkIn}}</p>
+        <p>Check Out: {{reservation.checkOut}} </p>
+
+    </div>
+</div>

@@ -4,6 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AngularFireModule } from '@angular/fire/compat';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { MaterialModule } from './material/material.module';
@@ -15,10 +16,13 @@ import { LoginComponent } from './auth/login/login.component';
 import { BookingComponent } from './booking/booking.component';
 import { CurrentBookingComponent } from './booking/current-booking/current-booking.component';
 import { NewBookingComponent } from './booking/new-booking/new-booking.component';
-import { PastBookingsComponent } from './booking/past-bookings/past-bookings.component';
 import { StopBookingComponent } from './booking/current-booking/stop-booking.component';
 import { environment } from './environments/environment';
-
+import { AuthService } from './auth/auth.service';
+import { BookingService } from './booking/booking.service';
+import { ReservationItemComponent } from './booking/reservation-item/reservation-item.component';
+import { ButtonComponent } from './button/button.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 @NgModule({
@@ -32,8 +36,9 @@ import { environment } from './environments/environment';
     BookingComponent,
     CurrentBookingComponent,
     NewBookingComponent,
-    PastBookingsComponent,
-    StopBookingComponent
+    StopBookingComponent,
+    ReservationItemComponent,
+    ButtonComponent
   ],
   imports: [
     BrowserModule,
@@ -42,9 +47,11 @@ import { environment } from './environments/environment';
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    AngularFireModule.initializeApp(environment.firebase)
+    AngularFireModule.initializeApp(environment.firebase),
+    HttpClientModule,
+    FontAwesomeModule
   ],
-  providers: [],
+  providers: [AuthService, BookingService],
   bootstrap: [AppComponent],
   entryComponents: [StopBookingComponent]
 })
