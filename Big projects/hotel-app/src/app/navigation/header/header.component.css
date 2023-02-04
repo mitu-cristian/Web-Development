@@ -8,6 +8,7 @@ a {
 a:hover,
 a:active {
     color: orange;
+    cursor: pointer;
 }
 
 .linksNav {

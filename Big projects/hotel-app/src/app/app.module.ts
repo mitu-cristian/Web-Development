@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { AppRoutingModule } from './app-routing.module';
+import { AngularFireModule } from '@angular/fire/compat';
+
 import { AppComponent } from './app.component';
 import { MaterialModule } from './material/material.module';
 import { HeaderComponent } from './navigation/header/header.component';
@@ -16,6 +17,7 @@ import { CurrentBookingComponent } from './booking/current-booking/current-booki
 import { NewBookingComponent } from './booking/new-booking/new-booking.component';
 import { PastBookingsComponent } from './booking/past-bookings/past-bookings.component';
 import { StopBookingComponent } from './booking/current-booking/stop-booking.component';
+import { environment } from './environments/environment';
 
 
 
@@ -39,7 +41,8 @@ import { StopBookingComponent } from './booking/current-booking/stop-booking.com
     BrowserAnimationsModule,
     MaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AngularFireModule.initializeApp(environment.firebase)
   ],
   providers: [],
   bootstrap: [AppComponent],

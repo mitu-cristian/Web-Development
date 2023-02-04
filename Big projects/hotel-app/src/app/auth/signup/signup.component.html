@@ -1,5 +1,6 @@
 <section>
     <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+        <h1>Sign up</h1>
         <mat-form-field>
             <mat-label>Your email</mat-label>
             <input type="email" matInput ngModel name="email" email required #pwInput="ngModel">

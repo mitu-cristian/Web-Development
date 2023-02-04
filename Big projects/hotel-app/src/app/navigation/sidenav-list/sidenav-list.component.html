@@ -1,8 +1,8 @@
 <mat-nav-list class="linksSidenav">
-    <a mat-list-item routerLink="/signup" (click)="onClose()">Sign Up</a>
-    <a mat-list-item routerLink="/login" (click)="onClose()">Login</a>
-    <a mat-list-item routerLink="/booking" (click)="onClose()">Rooms & Suites</a>
-    <mat-list-item (click)="onClose()">
+    <a mat-list-item routerLink="/signup" (click)="onClose()" *ngIf="!isAuthenticated()">Sign Up</a>
+    <a mat-list-item routerLink="/login" (click)="onClose()" *ngIf="!isAuthenticated()">Login</a>
+    <a mat-list-item routerLink="/booking" (click)="onClose()" *ngIf="isAuthenticated()">Rooms & Suites</a>
+    <mat-list-item (click)="onClose()" (click)="logout()" *ngIf="isAuthenticated()">
         <button mat-icon-button>
             <div id="button">Log Out</div>
         </button>
