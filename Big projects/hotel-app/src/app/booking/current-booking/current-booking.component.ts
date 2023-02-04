@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { StopBookingComponent } from './stop-booking.component';
 import { DatePipe } from '@angular/common';
 import { Reservation } from '../reservation.model';
+import { faBackspace } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-current-booking',
@@ -24,6 +25,9 @@ export class CurrentBookingComponent implements OnInit {
   checkOut: string = "";
 
   datepipe: DatePipe = new DatePipe('en-US');
+
+  text: string = "Back";
+  color: string = "green";
 
   ngOnInit() {
 

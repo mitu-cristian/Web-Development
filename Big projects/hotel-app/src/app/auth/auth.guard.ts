@@ -17,14 +17,6 @@ export class AuthGuard implements CanActivate {
             this.router.navigate(['/signup']);
     }
 
-    // isAuthenticated() {
-    //     this.authService.isAuth.subscribe((value) => {
-    //         this.isAuth = value;
-    //     })
-    //     console.log("Is it authenticated? " + this.isAuth)
-    //     return this.isAuth;
-    // }
-
     isAuthenticated() {
         this.authService.isAuth.subscribe((value) => {
             this.isAuth = value;

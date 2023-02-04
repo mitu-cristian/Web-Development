@@ -1,8 +1,10 @@
-<app-new-booking (bookingStart)="bookingStartFunction($event)"></app-new-booking>
+<app-new-booking *ngIf="!ongoingBooking" (bookingStart)="bookingStartFunction($event)"></app-new-booking>
 
 <app-current-booking *ngIf="ongoingBooking" (onAddReservation)="addReservation($event)"
     (bookingExit)="ongoingBooking = !ongoingBooking" [roomName]="roomName">
 </app-current-booking>
 
-<app-reservation-item *ngFor="let reservation of reservations" [reservation]="reservation"
-    (onDeleteReservation)="deleteReservation(reservation)"></app-reservation-item>
+<div *ngIf="!ongoingBooking">
+    <app-reservation-item *ngFor="let reservation of reservations" [reservation]="reservation"
+        (onDeleteReservation)="deleteReservation(reservation)"></app-reservation-item>
+</div>

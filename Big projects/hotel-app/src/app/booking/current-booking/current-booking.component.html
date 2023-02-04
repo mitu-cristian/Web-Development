@@ -37,7 +37,9 @@
         </mat-form-field>
 
         <button type="submit" mat-raised-button color="primary">Submit</button>
-        <button id="cancel" mat-raised-button color="accent" (click)="onStop()">Cancel</button>
-    </form>
 
+    </form>
+    <div class="container">
+        <app-button color="{{color}}" text="{{text}}" (click)="onStop()"></app-button>
+    </div>
 </section>
