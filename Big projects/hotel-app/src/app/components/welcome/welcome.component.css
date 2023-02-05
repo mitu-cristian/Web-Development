@@ -1,4 +1,9 @@
 body {
+    background: #ffda6a;
+    height: 100vh;
+}
+
+header {
     background: #ffbf00;
 }
 
@@ -8,6 +13,52 @@ h2 {
 }
 
 .container {
-    width: 1100px;
+    max-width: 1100px;
     margin: 0 auto;
+}
+
+.header .container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+#logo {
+    max-width: 50%;
+    padding-left: 50px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+#logo-description {
+    padding-right: 50px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    text-align: center;
+}
+
+.boxes .container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.box img {
+    max-width: 7%;
+    height: auto;
+}
+
+.box {
+    text-align: center;
+    margin-top: 75px;
+    background: #ffbf00;
+    padding: 20px;
+    border-radius: 10px;
+    width: 350px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.6);
 }
