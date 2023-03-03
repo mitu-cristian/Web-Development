@@ -13,6 +13,7 @@ body {
 main {
     min-height: calc(100vh - 190px);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: #2e3a52da;
@@ -110,6 +111,7 @@ svg {
 
 /* UserItem component style */
 .card {
+    width: 550px;
     border: 2px solid #fff;
     border-radius: 2%;
     margin-top: 25px;
@@ -154,6 +156,11 @@ h2+a:hover {
 
 /* User search */
 
+.grid-userSearch {
+    margin-top: 70px;
+    margin-bottom: 70px;
+}
+
 .search {
     margin-left: 30px;
 }
@@ -186,7 +193,6 @@ button {
 }
 
 .form-input {
-    width: 230px;
     padding: 8px 16px;
     font-size: 20px;
     font-weight: bold;
@@ -199,4 +205,18 @@ button {
 .form-input:focus {
     outline: none;
     border-color: #041a41;
+}
+
+/* Alert component */
+.display-alert {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.alert-svg {
+    width: 25px;
+}
+
+strong {
+    margin-left: 10px;
 }
