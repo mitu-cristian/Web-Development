@@ -1,11 +1,17 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const bootcamps = require('./routes/bootcamps');
+const fileupload = require('express-fileupload')
+
 const morgan = require('morgan');
 const connectDB = require('./config/db');
+const errorHandler = require('./middleware/error')
 
 // Load the config file
 dotenv.config({path: './config/config.env'});
+
+// Route files
+const bootcamps = require('./routes/bootcamps');
+const courses = require('./routes/courses')
 
 // Connect to the databse
 connectDB();
@@ -19,9 +25,15 @@ app.use(express.json());
 if(process.env.NODE_ENV === 'development')
     app.use(morgan('dev'))
 
-// Router
-app.use('/api/v1/bootcamps', bootcamps);
+// File upload
+app.use(fileupload())
 
+// Mount the routers
+app.use('/api/v1/bootcamps', bootcamps);
+app.use('/api/v1/courses', courses);
+
+// Error Middleware
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, console.log(`Server started on port ${PORT}`));

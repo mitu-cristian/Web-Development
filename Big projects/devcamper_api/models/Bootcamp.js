@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
+const geocoder = require('../utils/geocoder');
 
 const BootcampSchema = new mongoose.Schema({
     name: {
@@ -55,7 +57,7 @@ const BootcampSchema = new mongoose.Schema({
         zipcode: String,
         country: String
     },
-    carrers: {
+    careers: {
         // Array of strings
         type: [String],
         requires: true,
@@ -94,6 +96,54 @@ const BootcampSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
+}, {
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true}
+})
+
+// Create bootcamp slug from the name
+BootcampSchema.pre('save', function(next) {
+    this.slug = slugify(this.name, {lower: true});
+    next()
+});
+
+// Geocode & create location field
+BootcampSchema.pre('save', async function(next) {
+    const loc = await geocoder.geocode(this.address);
+    this.location = {
+        type: 'Point',
+        coordinates: [loc[0].longitude, loc[0].latitude],
+        formattedAddress: loc[0].formattedAddress,
+        street: loc[0].streetName,
+        city: loc[0].city,
+        state: loc[0].stateCode,
+        zipcode: loc[0].zipcode,
+        country: loc[0].countryCode
+    }
+
+// Do not save addres in DB
+this.address = undefined;
+    next();
+})
+
+// Cascade delete courses when bootcamp is deleted
+BootcampSchema.pre('deleteOne', {document: true, query:false} , async function (next) {
+    console.log(`Courses being removed from bootcamp ${this._id}`)
+    await this.model('Course').deleteMany({bootcamp: this._id})
+    next();
+})
+
+// Reverse populate with virtuals
+// 'courses' is the field that we want to add
+BootcampSchema.virtual('courses', {
+// reference to the model, Course in our case
+    ref: 'Course',
+    localField: '_id',
+// the field from Course model to which we want
+// to make the "join"
+    foreignField: 'bootcamp',
+// because we want an array
+    justOne: false
 })
 
 module.exports = mongoose.model('Bootcamp', BootcampSchema);
