@@ -25,7 +25,7 @@ app.use("/api/rooms", roomsRoute);
 // Error middleware
 app.use(errorHandler)
 
-app.listen(8800, ()=> {
+const server = app.listen(8800, ()=> {
     connectDB();
     console.log("Connected to backend :)")
 })
@@ -35,6 +35,6 @@ process.on('unhandledRejection', (err, promise) => {
     console.log(`Error: ${err.message}`);
     // Close server and exit process
     server.close(() => {
-        process.exit(1);
+    process.exit(1);
     }) 
 })

@@ -15,6 +15,16 @@ exports.updateUser = asyncHandler (async (req, res, next) => {
     res.status(200).json(user);
 })
 
+// @desc    Delete an user
+// @route   DELETE /api/users/:id
+exports.deleteUser = asyncHandler(async (req, res, next) => {
+    let user = User.findById(req.params.id)
+    if(!user)
+        return next(new ErrorResponse(`There is no user with the id of ${req.params.id}`, 404));
+    await user.deleteOne();
+    res.status(201).json({success: true, data: {}})
+})
+
 // @desc    Get a SINGLE user
 // @route   GET /api/users/:id
 exports.getUser = asyncHandler( async (req, res, next) => {
