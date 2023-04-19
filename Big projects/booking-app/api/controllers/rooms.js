@@ -20,12 +20,12 @@ exports.createRoom = asyncHandler (async (req, res, next) => {
 })
 
 // @desc    update a room
-// @route   
+// @route   /api/rooms/:id
 exports.updateRoom = asyncHandler( async (req, res, next) => {
     let room = await Room.findById(req.params.id);
     if(!room)
         return next(new ErrorResponse(`There is no room with the id of ${req.params.id}`, 403));
-    await Room.findByIdAndUpdate(req.params.id, req.body, {
+    room = await Room.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true
     })
@@ -54,17 +54,30 @@ exports.deleteRoom = asyncHandler( async (req, res, next) => {
 })
 
 // @desc    get a SINGLE room
-// @route
+// @route   /api/rooms/:id
 exports.getSingleRoom = asyncHandler( async(req, res, next) => {
-    let room = await Room.findById(rea.params.id);
+    let room = await Room.findById(req.params.id);
     if(!room)
         return next(new ErrorResponse(`There is no room with the id of ${req.params.id}`, 403));
     res.status(200).json(room);
 })
 
 // @desc    get ALL rooms
-// @route
+// @route   GET /api/rooms
 exports.getAllRooms = asyncHandler (async (req, res, next) => {
     const rooms = await Room.find()
     res.status(200).json(rooms);
 })
+
+// @desc    Update room availability
+// @route   PUT /api/rooms/availability/:id
+exports.updateRoomAvailability = asyncHandler (async (req, res, next) => {
+    let room = await Room.find({"roomNumbers._id": req.params.id})
+    if(!room)
+        return next(new ErrorResponse(`There is no room with the id of ${req.params.id}`, 403));
+    room = await Room.updateOne({"roomNumbers._id": req.params.id}, {
+        $push: { "roomNumbers.$.unavailableDates": req.body.dates }})
+    
+    res.status(200).json(room);
+    }
+)

@@ -7,13 +7,15 @@ const User = require('../models/User');
 exports.verifyToken = asyncHandler (async (req, res, next) => {
     let token;
 
-    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer'))
+    // if(req.headers.authorization && req.headers.authorization.startsWith('Bearer'))
 // Set token from Bearer Token in the header
-        token = req.headers.authorization.split(' ')[1];
+        // token = req.headers.authorization.split(' ')[1];
     
 // Uncommented => it is no longet necessary to set the token in the headers
-// else if(req.cookies.token)
-    // token = req.cookies.token;
+// else 
+console.log(req.cookies.token)
+if(req.cookies.token)
+    token = req.cookies.token;
 // Make sure token exists
     if(!token)
         return next( new ErrorResponse('Not authorised to access this route', 401));

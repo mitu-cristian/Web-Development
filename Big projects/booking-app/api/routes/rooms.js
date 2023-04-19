@@ -1,6 +1,6 @@
 const express = require("express");
 const {createRoom, updateRoom, deleteRoom,
-    getSingleRoom, getAllRooms} = require('../controllers/rooms');
+    getSingleRoom, getAllRooms, updateRoomAvailability} = require('../controllers/rooms');
 const {verifyAdmin} = require('../middleware/auth');
 
 const router = express.Router();
@@ -13,5 +13,6 @@ router.route('/:id')
     .get(getSingleRoom);
 
 router.delete('/:roomId/:hotelId', verifyAdmin, deleteRoom);
+router.put('/availability/:id', updateRoomAvailability)
 
 module.exports = router;

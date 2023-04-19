@@ -8,7 +8,7 @@ exports.register = asyncHandler ( async (req, res, next) => {
     const {username, email, password} = req.body;
     const user = await User.create({username, email, password});
     
-    res.status(200).send('User has been created');
+    sendTokenResponse (user, 200, res);
 })
 
 // @desc    Login an user
@@ -42,6 +42,6 @@ const sendTokenResponse = (user, statusCode, res) => {
 
     res
         .status(statusCode)
-        .cookie('access_token', token, options)
+        .cookie('token', token, options)
         .json({...otherDetails})
 }
