@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const RoomsSchema = new mongoose.Schema({
     title: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     price: {
         type: Number,
@@ -25,4 +26,4 @@ const RoomsSchema = new mongoose.Schema({
     {timestamps: true}
 );
 
-module.exports = mongoose.model('Rooms', RoomsSchema);
+module.exports = mongoose.model("Rooms", RoomsSchema);

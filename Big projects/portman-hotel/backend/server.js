@@ -20,6 +20,7 @@ app.use(cookieParser())
 // Routes
 app.use("/api/rooms", require("./routes/roomsRoute"));
 app.use("/api/users", require("./routes/usersRoute"));
+app.use("/api/reviews", require("./routes/reviewsRoutes"));
 
 // Dev logging middleware
 if(process.env.NODE_ENV === 'development')

@@ -1,0 +1,38 @@
+[
+    {
+        "_id": {
+          "$oid": "644448bec7774e448096da3b"
+        },
+        "title": "Camera 1",
+        "price": 100,
+        "maxPeople": 3,
+        "description": "O camera pentru 3 persoane",
+        "roomNumbers": [
+          {
+            "number": 101,
+            "unavailableDates": [],
+            "_id": {
+              "$oid": "644448bec7774e448096da3c"
+            }
+          },
+          {
+            "number": 102,
+            "unavailableDates": [],
+            "_id": {
+              "$oid": "644448bec7774e448096da3d"
+            }
+          }
+        ],
+        "createdAt": {
+          "$date": {
+            "$numberLong": "1682196670832"
+          }
+        },
+        "updatedAt": {
+          "$date": {
+            "$numberLong": "1682196670832"
+          }
+        },
+        "__v": 0
+      }
+]
