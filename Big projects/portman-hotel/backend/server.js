@@ -1,9 +1,12 @@
 const express = require('express');
-const dotenv = require('dotenv').config();
+const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const morgan = require('morgan');
 const errorHandler = require('./middleware/error');
 const cookieParser = require("cookie-parser");
+
+// Load the config file
+dotenv.config({path: "./config/config.env"});
 
 // Connect to the database
 connectDB();
@@ -21,6 +24,7 @@ app.use(cookieParser())
 app.use("/api/rooms", require("./routes/roomsRoute"));
 app.use("/api/users", require("./routes/usersRoute"));
 app.use("/api/reviews", require("./routes/reviewsRoutes"));
+app.use("/api/hotels", require("./routes/hotelsRoutes"));
 
 // Dev logging middleware
 if(process.env.NODE_ENV === 'development')

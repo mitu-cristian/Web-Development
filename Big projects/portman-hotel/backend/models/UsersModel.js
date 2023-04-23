@@ -27,7 +27,9 @@ const UsersSchema = new mongoose.Schema({
         default: false
     }
 },
-    {timestamps: true}
+    {timestamps: true,
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true}}
 )
 
 // Encrypting password using bcrypt
@@ -51,5 +53,19 @@ UsersSchema.methods.matchPassword = async function (enteredPassword) {
 // this.password is the hashed password saved in the database
     return await bcrypt.compare(enteredPassword, this.password)
 }
+
+// Cascade delete reviews when an user is deleted
+UsersSchema.pre('deleteOne',  {document: true, query: false}, async function(next) {
+    console.log("Review being deleted.")
+    await this.model('Reviews').deleteOne({user: this._id})
+    next();
+})
+
+// Reverse populate with virtuals i.e. for every User we will show the review
+UsersSchema.virtual('review', {
+    ref: 'Reviews',
+    localField: "_id",
+    foreignField: "user",
+})
 
 module.exports = mongoose.model("Users", UsersSchema);

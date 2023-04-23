@@ -1,67 +1,33 @@
 [
     {
-        "_id": {
-          "$oid": "6443ea751c13cef1ee944e6f"
-        },
+        "_id": "6443ea751c13cef1ee944e6f",
         "firstname": "admin",
         "lastname": "admin",
         "email": "admin@gmail.com",
-        "password": "$2a$10$rj/UaavB9Xe3a/Nbx3OY4OIgX4slIWgNEcuYILod7SKdOk1Ejt67y",
-        "isAdmin": true,
-        "createdAt": {
-          "$date": {
-            "$numberLong": "1682172533616"
-          }
-        },
-        "updatedAt": {
-          "$date": {
-            "$numberLong": "1682172734895"
-          }
-        },
-        "__v": 0
+        "password": "123456"
       },
 
       {
-        "_id": {
-          "$oid": "6443f9d82efbb581b9cd4caa"
-        },
+        "_id": "6443f9d82efbb581b9cd4caa",
         "firstname": "admin2",
         "lastname": "admin2",
         "email": "admin2@gmail.com",
-        "password": "$2a$10$6xbaFlvEmaLu.ajFBX18E.37EcXCRVCTJMUFm93zShPwHvESCOoPq",
-        "isAdmin": true,
-        "createdAt": {
-          "$date": {
-            "$numberLong": "1682176472397"
-          }
-        },
-        "updatedAt": {
-          "$date": {
-            "$numberLong": "1682176472397"
-          }
-        },
-        "__v": 0
+        "password": "123456"
       },
 
       {
-        "_id": {
-          "$oid": "6444053a77f6b2fe2e6dfc96"
-        },
+        "_id": "6444053a77f6b2fe2e6dfc96",
         "firstname": "Cristian",
         "lastname": "Mitu",
         "email": "cristian@gmail.com",
-        "password": "$2a$10$HM7zeIpl0zprk72Sb44WZuBAOk0adDAFvXZL4xQe9R6tFwzqlRBMK",
-        "isAdmin": false,
-        "createdAt": {
-          "$date": {
-            "$numberLong": "1682179386142"
-          }
-        },
-        "updatedAt": {
-          "$date": {
-            "$numberLong": "1682179386142"
-          }
-        },
-        "__v": 0
+        "password": "123456"
+      },
+
+      {
+        "_id": "6445283e676cc15f212623b8",
+        "firstname": "John",
+        "lastname": "Doe",
+        "email": "john@gmail.com",
+        "password": "123456"
       }
 ]

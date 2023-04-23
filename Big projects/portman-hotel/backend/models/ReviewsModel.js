@@ -10,33 +10,23 @@ const ReviewsSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        required: [true, "Please add a description for the review"]
+        required: [true, "Please add a description for the review."]
     },
     rating: {
         type: Number,
         min: 1,
         max: 10,
-        required: [true, "Please add a rating between 1 and 10"]
+        required: [true, "Please add a rating between 1 and 10."]
     },
     user: {
-        type: mongoose.Schema.ObjectId,
-        ref: "UsersModel",
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users",
+        required: [true, "Please add an user."]
     }
 }, {timestamps: true})
 
-
-ReviewsSchema.pre('save', async function (next) {
-    const review = this;
-    console.log("A intrat aici.")
-    const existingReview = await ReviewsModel.findOne({user: review.user});
-    if(existingReview)
-    return next(new ErrorResponse("An user can add only one review", 403))
-    return next();
-})
-
 // An user can add maximum one review / bootcamp
-// ReviewsSchema.index(
-//     {user: 1}, {unique: true})
+ReviewsSchema.index(
+    {user: 1}, {unique: true})
 
 module.exports = mongoose.model("Reviews", ReviewsSchema)

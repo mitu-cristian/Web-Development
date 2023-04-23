@@ -34,4 +34,4 @@ const HotelsSchema = new mongoose.Schema({
 },
 {timestamps: true})
 
-module.exports = mongoose.model("HotelsModel", HotelsSchema); 
+module.exports = mongoose.model("Hotels", HotelsSchema); 

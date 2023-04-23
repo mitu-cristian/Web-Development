@@ -65,13 +65,10 @@ exports.logoutUser = asyncHandler (async (req, res, next) => {
 
 // @desc    Update my user details
 // @route   PUT /api/users
-// @access    User
+// @access  Only User
 exports.updateMyUserDetails = asyncHandler(async (req, res, next) => {
     const {firstname, lastname, email} = req.body;
 
-// Check if the user is an Admin and add the field to req.body
-    if(req.user.isAdmin === true)
-        req.body.isAdmin = true;
     let user = await Users.find({"email": email});
     
 // If in the email input uses the same email address as in the database
@@ -112,7 +109,7 @@ exports.getMe = asyncHandler (async (req, res, next) => {
 // @route   GET /api/users/:userId
 // @access  ADMIN
 exports.getAnUser = asyncHandler (async (req, res, next) => {
-    const user = await Users.findById(req.params.userId)
+    const user = await Users.findById(req.params.userId).populate('review')
     if(!user)
         return next(new ErrorResponse(`There is no user with the id of ${req.params.userId}.`, 401));
     if(user._id.toString() === req.user.toString())
@@ -149,4 +146,12 @@ exports.deleteAnUser = asyncHandler (async (req, res, next) => {
         await user.deleteOne();
         res.status(200).json({success: true, message: "The user has been successfuly deleted."})
     }
+})
+
+// @desc    see all users
+// @route   GET /api/users/all
+// @access  ADMIN
+exports.getAllUsers = asyncHandler(async (req, res, next) => {
+    const users = await Users.find({isAdmin: false}).populate('review');
+    res.status(200).json({success: true, count: users.length ,data: users})
 })

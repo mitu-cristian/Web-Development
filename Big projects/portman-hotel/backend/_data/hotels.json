@@ -1,0 +1,11 @@
+[
+    {
+        "_id":"64451d41334f6fcfc4c16478",
+        "name": "Portman Hotel",
+        "city": "Galati",
+        "address": "Bulevardul Marea Unire 107",
+        "description": "The best hotel in Galati",
+        "phone": "0757629401",
+        "email": "portmanhotel@email.com"
+      }
+]

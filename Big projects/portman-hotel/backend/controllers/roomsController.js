@@ -23,7 +23,7 @@ exports.getSingleRoom = asyncHandler (async (req, res, next) => {
 // @route   GET /api/rooms
 exports.getAllRooms = asyncHandler (async (req, res, next) => {
     const rooms = await Rooms.find()
-    res.status(200).json({success: true, data: rooms})
+    res.status(200).json({success: true, count: rooms.length, data: rooms})
 })
 
 // @desc    update room

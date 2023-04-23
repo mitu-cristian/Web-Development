@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const asyncHandler = require("./async");
 const ErrorResponse = require("../utils/errorResponse");
 const Users = require("../models/UsersModel");
+const Reviews = require("../models/ReviewsModel");
 
 exports.verifyUser = asyncHandler (async (req, res, next) => {
     let token;
@@ -38,6 +39,13 @@ exports.verifyOnlyUser = asyncHandler (async (req, res, next) => {
         next();
     else    
         return next(new ErrorResponse("You are not authorised.", 401))
+})
+
+exports.oneReviewUser = asyncHandler( async(req, res, next) => {
+    const review = await Reviews.findOne({user: req.user.id})
+    if(review)
+        return next(new ErrorResponse("An user can add only one review.", 403));
+    next();
 })
 
 exports.verifyAdmin = asyncHandler(async (req, res, next) => {
