@@ -21,10 +21,10 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser())
 
 // Routes
-app.use("/api/rooms", require("./routes/roomsRoute"));
-app.use("/api/users", require("./routes/usersRoute"));
+app.use("/api/rooms", require("./routes/roomsRoutes"));
+app.use("/api/users", require("./routes/usersRoutes"));
 app.use("/api/reviews", require("./routes/reviewsRoutes"));
-app.use("/api/hotels", require("./routes/hotelsRoutes"));
+app.use("/api/reservations", require("./routes/reservationsRoutes"));
 
 // Dev logging middleware
 if(process.env.NODE_ENV === 'development')

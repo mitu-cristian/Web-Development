@@ -1,6 +1,8 @@
 const Users = require("../models/UsersModel");
 const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
+const Reservations = require("../models/ReservationsModel");
+const Rooms = require("../models/RoomsModel");
 
 const sendTokenResponse = (user, statusCode, res) => {
     // Create token
@@ -109,7 +111,7 @@ exports.getMe = asyncHandler (async (req, res, next) => {
 // @route   GET /api/users/:userId
 // @access  ADMIN
 exports.getAnUser = asyncHandler (async (req, res, next) => {
-    const user = await Users.findById(req.params.userId).populate('review')
+    const user = await Users.findById(req.params.userId).populate('review').populate('reservations')
     if(!user)
         return next(new ErrorResponse(`There is no user with the id of ${req.params.userId}.`, 401));
     if(user._id.toString() === req.user.toString())
@@ -136,16 +138,19 @@ exports.deleteAnUser = asyncHandler (async (req, res, next) => {
     const user = await Users.findById(req.params.userId)
     if(!user)
         return next(new ErrorResponse(`There is no user with the id of ${req.params.userId}.`, 401))
-    else if(user._id.toString() === req.user.toString())
+
 // The admin can not delete his account
+    else if(user._id.toString() === req.user.toString())
         return next(new ErrorResponse("To delete your admin account, please use the appropriate route.", 403))
-    else if(user.isAdmin === true)
+    
 // The admin can not delete another admin's account
-        return next(new ErrorResponse("You are not allowed to delete another admin's account.", 403));
-    else {
-        await user.deleteOne();
-        res.status(200).json({success: true, message: "The user has been successfuly deleted."})
-    }
+        else if(user.isAdmin === true)
+            return next(new ErrorResponse("You are not allowed to delete another admin's account.", 403));
+
+    await user.deleteOne();
+    res.status(200).json({success: true, message: "The user has been successfuly deleted."})
+    
+
 })
 
 // @desc    see all users

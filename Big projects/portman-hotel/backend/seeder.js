@@ -9,7 +9,7 @@ dotenv.config({path: "./config/config.env"})
 const Users = require("./models/UsersModel");
 const Rooms = require("./models/RoomsModel");
 const Reviews = require("./models/ReviewsModel");
-const Hotels = require("./models/HotelsModel");
+const Reservations = require("./models/ReservationsModel");
 
 // Connect to DB
 mongoose.connect(process.env.MONGO_URI);
@@ -18,7 +18,6 @@ mongoose.connect(process.env.MONGO_URI);
 const users = JSON.parse(fs.readFileSync(`${__dirname}/_data/users.json`, 'utf-8'));
 const rooms = JSON.parse(fs.readFileSync(`${__dirname}/_data/rooms.json`, 'utf-8'));
 const reviews = JSON.parse(fs.readFileSync(`${__dirname}/_data/reviews.json`, 'utf-8'));
-const hotels = JSON.parse(fs.readFileSync(`${__dirname}/_data/hotels.json`, 'utf-8'));
 
 // Import into DB
 const importData = async() => {
@@ -26,7 +25,6 @@ const importData = async() => {
         await Users.create(users);
         await Rooms.create(rooms);
         await Reviews.create(reviews);
-        await Hotels.create(hotels)
         console.log("Data imported...");
         process.exit();
     }
@@ -39,8 +37,8 @@ const deleteData = async() => {
     try {
         await Users.deleteMany();
         await Rooms.deleteMany();
-        await Hotels.deleteMany();
         await Reviews.deleteMany();
+        await Reservations.deleteMany();
         console.log("Data destroyed...");
         process.exit();
     }

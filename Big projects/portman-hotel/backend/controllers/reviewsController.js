@@ -2,6 +2,7 @@ const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
 const Reviews = require("../models/ReviewsModel");
 const Users = require("../models/UsersModel");
+const Reservations = require("../models/ReservationsModel");
 
 // @desc    Get all reviews
 // @route   GET /api/reviews/all
@@ -90,6 +91,20 @@ exports.getMyReview = asyncHandler( async(req, res, next) => {
 exports.addReview = asyncHandler (async (req, res, next) => {
     req.body.user = req.user.id;
     const {title, description, rating, user} = req.body;
+
+// Check if the user has a reservation in status completed
+    const reservations = await Reservations.find({user: req.user.id})
+    i = 0;
+    ok = false;
+    while(i < reservations.length && ok == false) {
+        if(reservations[i].status === "completed" )
+            ok = true;
+        i = i + 1;
+    }
+
+    if(ok === false)
+        return next(new ErrorResponse('Only a user with a reservation in status completed can add a review.', 403));
+
     const review = await Reviews.create({title, description, rating, user});
     res.status(201).json({success: true, data: review})
 })
@@ -154,4 +169,20 @@ exports.deleteUserReview = asyncHandler( async(req, res, next) => {
         review.deleteOne();
         res.status(200).json({success: true, message: "The review has beeen successfuly deleted."})
     }
+})
+
+// @desc    Get average rating
+// @route   GET /api/reviews/average
+exports.getAverageRating = asyncHandler( async (req, res, next) => {
+    const reviews = await Reviews.find();
+    
+    let i = 0;
+    ratingSum = 0;
+    while (i < reviews.length) {
+        ratingSum = ratingSum + reviews[i].rating;
+        i = i + 1;
+    }
+
+    ratingAvg = ratingSum / reviews.length.toFixed(2);
+    res.status(200).json({success: true, ratingAvg})
 })

@@ -1,10 +1,11 @@
 const express = require("express");
 const {addReview, getMyReview, updateMyReview, deleteMyReview, getUserReview, 
-    deleteUserReview, getAllReviews} = require("../controllers/reviewsController");
+    deleteUserReview, getAllReviews, getAverageRating} = require("../controllers/reviewsController");
 const {verifyOnlyUser, oneReviewUser, verifyAdmin} = require("../middleware/auth");
 const router = express.Router();
 
 router.get("/all", getAllReviews);
+router.get("/average", getAverageRating)
 
 router.route("/")
     .get(verifyOnlyUser, getMyReview)

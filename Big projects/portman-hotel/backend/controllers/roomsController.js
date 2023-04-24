@@ -55,7 +55,7 @@ exports.deleteRoom = asyncHandler( async(req, res, next) => {
 // @route   PUT /api/rooms/availability/:id
 // @access  User
 exports.updateRoomAvailabilityAdd = asyncHandler( async(req, res, next) => {
-    let room = await Rooms.find({"roomNumbers._id": req.params.id})
+    let room = await Rooms.findOne({"roomNumbers._id": req.params.id})
     if (!room)
         return next(new ErrorResponse(`There is no room with the id of ${req.params.id}`, 400));
     room = await Rooms.findOneAndUpdate({"roomNumbers._id": req.params.id}, {
@@ -71,7 +71,7 @@ exports.updateRoomAvailabilityAdd = asyncHandler( async(req, res, next) => {
 // @route   DELETE /api/rooms/availability/:id
 // @access  User
 exports.updateRoomAvailabilityDelete = asyncHandler(async (req, res, next) => {
-    let room = await Rooms.find({ "roomNumbers._id": req.params.id });
+    let room = await Rooms.findOne({ "roomNumbers._id": req.params.id });
     if (!room) 
         return next(new ErrorResponse(`There is no room with the id of ${req.params.id}`, 400));
   

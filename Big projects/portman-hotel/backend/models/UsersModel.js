@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const Rooms = require("../models/RoomsModel");
+const Reservations = require("../models/ReservationsModel");
+const {getDatesInRange} = require("../utils/getDatesInRange")
 
 const UsersSchema = new mongoose.Schema({
     firstname: {
@@ -58,6 +61,24 @@ UsersSchema.methods.matchPassword = async function (enteredPassword) {
 UsersSchema.pre('deleteOne',  {document: true, query: false}, async function(next) {
     console.log("Review being deleted.")
     await this.model('Reviews').deleteOne({user: this._id})
+    
+    const reservations = await Reservations.find({user: this._id})
+    
+    let i = 0;
+    while (i < reservations.length) {
+
+        let start = reservations[i].startDate;
+        let end = reservations[i].endDate;
+        let number = reservations[i].roomNumber;
+
+        const allDates = getDatesInRange(start, end);
+        await Rooms.findOneAndUpdate({ "roomNumbers.number": number },
+      { $pullAll: { "roomNumbers.$.unavailableDates": allDates } }, { new: true }
+    );
+        i = i + 1;
+    }   
+        await Reservations.deleteMany({user: this._id})
+        
     next();
 })
 
@@ -66,6 +87,13 @@ UsersSchema.virtual('review', {
     ref: 'Reviews',
     localField: "_id",
     foreignField: "user",
+})
+
+UsersSchema.virtual("reservations", {
+    ref: 'Reservations',
+    localField: "_id",
+    foreignField: "user",
+    justOne: false
 })
 
 module.exports = mongoose.model("Users", UsersSchema);
