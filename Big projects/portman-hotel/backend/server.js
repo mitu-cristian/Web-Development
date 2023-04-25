@@ -5,6 +5,13 @@ const morgan = require('morgan');
 const errorHandler = require('./middleware/error');
 const cookieParser = require("cookie-parser");
 
+// Secure the API
+const mongoSanitize = require("express-mongo-sanitize");
+const helmet = require("helmet");
+const xss = require("xss-clean");
+const rateLimit = require("express-rate-limit");
+const hpp = require("hpp");
+
 // Load the config file
 dotenv.config({path: "./config/config.env"});
 
@@ -19,6 +26,17 @@ app.use(express.urlencoded({extended: false}));
 
 // Cookie Parser
 app.use(cookieParser())
+
+// Secure the API
+app.use(mongoSanitize())
+app.use(helmet())
+app.use(xss())
+const limiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 minutes
+    max: 100
+})
+app.use(limiter)
+app.use(hpp())
 
 // Routes
 app.use("/api/rooms", require("./routes/roomsRoutes"));
