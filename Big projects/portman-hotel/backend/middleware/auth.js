@@ -32,7 +32,7 @@ exports.verifyOnlyUser = asyncHandler (async (req, res, next) => {
     
 // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await Users.findById(decoded.id)
+    req.user = await Users.findById(decoded.id).select("+isAdmin")
     if(req.user.isAdmin === true)
         return next( new ErrorResponse("Admins are not allowed to access this route.", 403));
     else if(req.user.isAdmin === false)
@@ -58,7 +58,7 @@ exports.verifyAdmin = asyncHandler(async (req, res, next) => {
 
 // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await Users.findById(decoded.id)
+    req.user = await Users.findById(decoded.id).select("+isAdmin")
     if(req.user.isAdmin === true)
         next();
     else 

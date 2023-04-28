@@ -27,7 +27,8 @@ const UsersSchema = new mongoose.Schema({
     },
     isAdmin: {
         type: Boolean,
-        default: false
+        default: false,
+        select: false
     }
 },
     {timestamps: true,
@@ -46,7 +47,7 @@ UsersSchema.pre('save', async function(next){
 
 // Sign JWT and return
 UsersSchema.methods.getSignedJwtToken = function () {
-    return jwt.sign({id: this._id, isAdmin: this.isAdmin}, process.env.JWT_SECRET, {
+    return jwt.sign({id: this._id}, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRE
     })
 }

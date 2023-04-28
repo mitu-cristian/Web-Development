@@ -24,7 +24,7 @@ exports.registerUser = asyncHandler (async (req, res, next) => {
     const {firstname, lastname, email, password} = req.body;
     const users = await Users.findOne({"email": email})
     if(users)
-        return next(new ErrorResponse(`There is already an account registered with the email address ${email}.`))
+        return next(new ErrorResponse(`There is already an account registered with the email address ${email}.`, 403))
     const user = await Users.create({firstname, lastname, email, password});
     sendTokenResponse (user, 201, res);
 })
