@@ -4,6 +4,25 @@ const Reviews = require("../models/ReviewsModel");
 const Users = require("../models/UsersModel");
 const Reservations = require("../models/ReservationsModel");
 
+// @desc    See if a user has a reservation in status completed
+// @route   GET /api/reviews/check
+// @access  User (user + admin)
+exports.reviewCheck = asyncHandler(async (req, res, next) => {
+    const reservations = await Reservations.find({user: req.user.id})
+    let i = 0;
+    ok = false;
+    while(i < reservations.length && ok === false) {
+        if(reservations[i].status === "completed")
+            ok = true;
+        i = i + 1;
+    }
+
+    if(ok === false)
+        res.status(200).json({success: true, "addReview" : false })
+    else if (ok === true)
+        res.status(200).json({success: true, "addReview" : true})
+})
+
 // @desc    Get all reviews
 // @route   GET /api/reviews/all
 // @access  Public
@@ -80,8 +99,10 @@ exports.getAllReviews = asyncHandler(async (req, res, next) => {
 exports.getMyReview = asyncHandler( async(req, res, next) => {
     const review = await Reviews.findOne({user: req.user._id})
     if(!review)
-        return next(new ErrorResponse("You do not have any review.", 400));
-    res.status(200).json({success: true, data: review})
+        res.status(200).json({success: false, message: "You do not have any review."})
+        // return next(new ErrorResponse("You do not have any review.", 400));
+    else 
+        res.status(200).json({success: true, data: review})
 
 })
 
@@ -94,9 +115,9 @@ exports.addReview = asyncHandler (async (req, res, next) => {
 
 // Check if the user has a reservation in status completed
     const reservations = await Reservations.find({user: req.user.id})
-    i = 0;
+    let i = 0;
     ok = false;
-    while(i < reservations.length && ok == false) {
+    while(i < reservations.length && ok === false) {
         if(reservations[i].status === "completed" )
             ok = true;
         i = i + 1;

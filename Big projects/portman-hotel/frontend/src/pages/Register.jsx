@@ -15,7 +15,7 @@ function Register() {
         password: "",
         password2: ""
     })
-
+    
     const {firstname, lastname, email, password, password2} = formData;
     const navigate = useNavigate();
 
@@ -26,9 +26,9 @@ function Register() {
         if(isError)
             toast.error(message);
 
-        if(isSuccess || user) {
+        if(isSuccess || user) 
             navigate("/");
-        }
+        
         dispatch(reset());
     }, [user, isError, isSuccess, message, navigate, dispatch] )
     

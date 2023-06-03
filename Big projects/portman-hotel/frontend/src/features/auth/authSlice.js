@@ -3,27 +3,12 @@ import authService from "./authService";
 
 const user = JSON.parse(localStorage.getItem("user"));
 
-function getCookie(name) {
-    const cookies = document.cookie.split('; ');
-    for (const cookie of cookies) {
-      const [cookieName, cookieValue] = cookie.split('=');
-      if (cookieName === name) {
-        return cookieValue;
-      }
-    }
-    return null;
-  }
-  
-  const token = getCookie('token');
-  console.log(document.cookie);
-
-
 const initialState = {
     user: user ? user : null,
     isError: false,
     isSuccess: false,
     isLoading: false,
-    message: ''
+    message: ""
 }
 
 // Register
@@ -33,8 +18,7 @@ export const register = createAsyncThunk("auth/register", async(user, thunkAPI) 
     }
 
     catch(error) {
-        const message = error.response.data.error;
-        console.log(error)  
+        const message = error.response.data.error;  
         return thunkAPI.rejectWithValue(message);
     }   
 })
@@ -53,8 +37,26 @@ export const login = createAsyncThunk("auth/login", async(user, thunkAPI) => {
 })
 
 // Logout
-export const logout = createAsyncThunk("auth/logout", async () => {
-    await authService.logout();
+export const logout = createAsyncThunk("auth/logout", async (thunkAPI) => {
+    try {
+        await authService.logout();
+    }
+
+    catch(error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
+// Delete account
+export const deleteAcc = createAsyncThunk("auth/deleteAcc", async(thunkAPI) => {
+    try {
+        return await authService.deleteAcc();
+    }
+    catch(error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message);
+    }
 })
 
 export const authSlice = createSlice({
@@ -104,10 +106,37 @@ export const authSlice = createSlice({
             })
 
     // Logout
-            .addCase(logout.fulfilled, (state) => {
+            .addCase(logout.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(logout.rejected, (state, action) => {
+                state.message = action.payload;
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
+            })
+            .addCase(logout.fulfilled, (state, action) => {
+                state.message = action.payload;
+                state.isLoading = false;
+                state.isSuccess = true;
                 state.user = null;
             })
 
+    // Delete account
+            .addCase(deleteAcc.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(deleteAcc.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload;
+                state.user = null;
+            })
+            .addCase(deleteAcc.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
     }
 })
 

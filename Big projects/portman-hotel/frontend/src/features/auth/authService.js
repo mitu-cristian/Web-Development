@@ -10,6 +10,7 @@ const register = async (userData) => {
     return response.data.data;
 }
 
+// Login
 const login = async (userData) => {
     const response = await axios.post(API_URL + "login", userData)
     if(response.data.success === true)
@@ -20,10 +21,18 @@ const login = async (userData) => {
 // Logout
 const logout = async () => {
     const response = await axios.get(API_URL + "logout", {withCredentials: true});
-    localStorage.removeItem("user");
+    if(response.data.success === true)
+        localStorage.removeItem("user");
+    return response.data;
+}
+
+// Delete the account
+const deleteAcc = async () => {
+    const response = await axios.delete(API_URL, {withCredentials: true});
+    return response.data;
 }
 
 const authService = {
-    register, login, logout
+    register, login, logout, deleteAcc
 }
 export default authService;

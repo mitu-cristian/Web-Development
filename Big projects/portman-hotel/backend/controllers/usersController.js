@@ -4,7 +4,7 @@ const asyncHandler = require("../middleware/async");
 const Reservations = require("../models/ReservationsModel");
 const Rooms = require("../models/RoomsModel");
 
-const sendTokenResponse = (user, statusCode, res) => {
+const sendTokenResponse = (user, statusCode, res, message) => {
     // Create token
         const token = user.getSignedJwtToken();
         const options = {
@@ -12,10 +12,17 @@ const sendTokenResponse = (user, statusCode, res) => {
             httpOnly: true
         }
         const {password, isAdmin, ...otherDetails} = user._doc;
+
+        if(message)
         res
             .status(statusCode)
             .cookie('token', token, options)
-            .json({success: true, data:{...otherDetails}})
+            .json("Your password has been updated.")
+        else
+            res
+                .status(statusCode)
+                .cookie('token', token, options)
+                .json({success: true, data: {...otherDetails}})
     }
 
 // @desc    register an user
@@ -23,14 +30,17 @@ const sendTokenResponse = (user, statusCode, res) => {
 exports.registerUser = asyncHandler (async (req, res, next) => {
     const {firstname, lastname, email, password} = req.body;
     const users = await Users.findOne({"email": email})
-    if(users)
+    if(users) {
+        console.log(users)
         return next(new ErrorResponse(`There is already an account registered with the email address ${email}.`, 403))
+    }
     const user = await Users.create({firstname, lastname, email, password});
-    sendTokenResponse (user, 201, res);
+    sendTokenResponse (user, 201, res, message = undefined);
 })
 
 // @desc    login an user
 // @route   POST /api/user/login
+// @access  ONLY USERS 
 exports.loginUser = asyncHandler (async (req, res, next) => {
 // Verifications
     if(!req.body.email && !req.body.password)
@@ -38,31 +48,57 @@ exports.loginUser = asyncHandler (async (req, res, next) => {
     else if(!req.body.email)
         return next(new ErrorResponse('Please provide a valid email address', 400));
     else if(!req.body.password)
-        return next(new ErrorResponse('Please provide your email address', 400));
+        return next(new ErrorResponse('Please provide your password', 400));
     
 // Check if user exists
-    const user = await Users.findOne({email: req.body.email}).select("+password");
+    const user = await Users.findOne({email: req.body.email}).select("+password").select("+isAdmin");
     if(!user)
         return next(new ErrorResponse('Invalid credentials', 401));
+    if(user.isAdmin === true) 
+        return next(new ErrorResponse('You are not allowed to access this route', 403));
+    
 // Check if password matches
     const isMatch = await user.matchPassword(req.body.password);
     if(!isMatch)
         return next(new ErrorResponse('Invalid credentials', 401));
-    sendTokenResponse(user, 200, res);
+    sendTokenResponse(user, 200, res, message = undefined);
+})
+
+// @desc    login an admin
+// @route   POST /api/user/login/admin
+exports.loginAdmin = asyncHandler (async (req, res, next) => {
+// Verifications
+    if(!req.body.email && !req.body.password)
+        return next(new ErrorResponse('Please provide your email address and password', 400));
+    else if(!req.body.email)
+        return next(new ErrorResponse('Please provide a valid email address', 400));
+    else if(!req.body.password)
+        return next(new ErrorResponse('Please provide your password', 400))
+
+// Check if user exists
+    const user = await Users.findOne({email: req.body.email}).select("+password").select("+isAdmin");
+    if(!user)
+        return next(new ErrorResponse('Invalid credentials', 401));
+    else if(user.isAdmin === false)
+        return next(new ErrorResponse('You are not allowed to access this route', 403));
+    // Check if password matches
+    const isMatch = await user.matchPassword(req.body.password);
+    if(!isMatch)
+        return next(new ErrorResponse('Invalid credentials', 401));
+    sendTokenResponse(user, 200, res, message = undefined);
 })
 
 // @desc    logout
 // @route   GET /api/users/logout
 // @route   User
 exports.logoutUser = asyncHandler (async (req, res, next) => {
-    res.cookie('token', 'none', {
-        expires: new Date(Date.now() + 10*1000),
-        httpOnly: true
-    })
-    res.status(200).json({
-        success: true,
-        message: `You have successfuly logged out.`
-    })
+    res
+        .status(200)
+        .cookie('token', 'none', {
+            expires: new Date(Date.now() + 10*1000),
+            httpOnly: true
+        })
+        .json({success: true})
 })
 
 // @desc    Update my user details
@@ -80,7 +116,7 @@ if(user.length === 0 || (user.length === 1 && user[0]._id.toString() === req.use
             new: true,
             runValidators: true
         })
-        res.status(200).json({success: true, data: user})
+        res.status(200).json("Your information has been successfuly updated.")
     }
     else {
         return next( new ErrorResponse(`You cannot use the email address ${email}`, 400))
@@ -94,10 +130,11 @@ exports.updateMyPassword = asyncHandler( async (req, res, next) => {
     const user = await Users.findById(req.user.id).select("+password");
 // Check current password
     if(!(await user.matchPassword(req.body.currentPassword)))
-        return next(new ErrorResponse('Password is incorrect', 401));
+        return next(new ErrorResponse('Your current password is incorrect.', 401));
     user.password = req.body.newPassword;
     await user.save();
-    sendTokenResponse(user, 200, res);
+    message = "Your password has been successfuly updated."
+    sendTokenResponse(user, 200, res, message);
 })
 
 // @desc    Get me
@@ -128,7 +165,14 @@ exports.getAnUser = asyncHandler (async (req, res, next) => {
 // @access  User
 exports.deleteMe = asyncHandler (async (req, res, next) => {
     await req.user.deleteOne();
-    res.status(200).json({success: true, message: "Your user has beeen successfuly deleted."})
+    res
+        .status(200)
+        .cookie('token', 'none', {
+            expires: new Date(Date.now() + 10*1000),
+            httpOnly: true
+        })
+        .json("Your user has beeen successfuly deleted.")
+        
 })
 
 // @desc    delete an user
