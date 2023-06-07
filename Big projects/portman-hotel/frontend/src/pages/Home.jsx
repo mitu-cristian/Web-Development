@@ -2,6 +2,7 @@ import {useEffect} from "react";
 
 // import components
 import Review from "../components/Review";
+import Header from "../components/Header/Header";
 
 // Redux general
 import {useSelector, useDispatch} from "react-redux";
@@ -20,6 +21,7 @@ function Home() {
 
   return (
     <>
+      <Header bookingForm = {true}/>
       Avg rating: {avg}   
       <Review/>   
     </>

@@ -14,10 +14,6 @@ const RoomsSchema = new mongoose.Schema({
         type: Number,
         required: [true, "Please add the maximum people."]
     },
-    description: {
-        type: String,
-        required: [true, "Please add the description."]
-    },
     roomNumbers: [{
         number: Number,
         unavailableDates: { type: [Date] }

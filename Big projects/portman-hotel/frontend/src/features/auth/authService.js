@@ -21,8 +21,13 @@ const login = async (userData) => {
 // Logout
 const logout = async () => {
     const response = await axios.get(API_URL + "logout", {withCredentials: true});
-    if(response.data.success === true)
+    if(response.data.success === true) {
         localStorage.removeItem("user");
+        localStorage.removeItem("adults");
+        localStorage.removeItem("children");
+        localStorage.removeItem("startDate");
+        localStorage.removeItem("endDate");
+    }
     return response.data;
 }
 

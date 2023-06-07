@@ -4,7 +4,6 @@
         "title": "Camera 1",
         "price": 100,
         "maxPeople": 3,
-        "description": "O camera pentru 3 persoane",
         "roomNumbers": [
           {
             "number": 101,

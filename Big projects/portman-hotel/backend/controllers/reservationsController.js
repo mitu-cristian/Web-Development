@@ -36,14 +36,37 @@ else if(req.user.isAdmin === true && req.params.userId) {
     const startDate = new Date(start);
     const endDate = new Date(end);
     const allDates = getDatesInRange(startDate, endDate);
+    const allDatesTransformed = [];
+    allDates.forEach(element => {
+        allDatesTransformed.push(new Date(element));
+    })
+
+    room = await Rooms.findOne({"roomNumbers._id": req.params.roomId})
+    const length = room.roomNumbers.length;
+    let i = 0;
+    let ok = false; // There is no problem with the dates
+    while (i < length && ok == false) {
+        if(room.roomNumbers[i]._id.toString() === req.params.roomId.toString()) // We have found the room from the params
+        {
+            let j= 0;
+            
+            while (j < allDatesTransformed.length) {
+                for (let k = 0; k < room.roomNumbers[i].unavailableDates.length; k = k+1)
+                        if(allDatesTransformed[j].toString() === room.roomNumbers[i].unavailableDates[k].toString())
+                            ok = true; // There is a problem with the dates
+                j = j + 1;
+            }
+        }
+            i = i + 1;
+    }
+    if(ok == true)
+        return next(new ErrorResponse("The room is unavailable in the selected period of time.", 403));
     
     room = await Rooms.findOneAndUpdate({"roomNumbers._id": req.params.roomId} , {
         $push: {"roomNumbers.$.unavailableDates": allDates}
     }, {
         new: true
     })
-    
-    console.log(rooms)
 
     const roomNumber = room.roomNumbers.find(r => r._id.toString() === req.params.roomId).number;
     const price = room.price * ((endDate-startDate)/1000/60/60/24)
@@ -84,7 +107,10 @@ exports.cancelReservation = asyncHandler( async (req, res, next) => {
     if(!reservation)
         return next(new ErrorResponse(`There is no reservation with the id of ${req.params.reservationId}`, 400));
 
-    if(( req.user.isAdmin === false && reservation.user.toString() === req.user.id.toString()) || req.user.isAdmin === true ) {
+    if(reservation.status === "canceled")
+        res.status(200).json({success: true, message: "The reservation has been already canceled."})        
+
+    else if(( req.user.isAdmin === false && reservation.user.toString() === req.user.id.toString()) || req.user.isAdmin === true ) {
         let start = reservation.startDate;
         let end = reservation.endDate;
         let number = reservation.roomNumber;
@@ -97,7 +123,7 @@ exports.cancelReservation = asyncHandler( async (req, res, next) => {
             runValidators: true
         })
 
-        res.status(200).json({success: true, message: "The reservation has been canceled."})
+        res.status(200).json({success: true, data: req.params.reservationId})
     }
         
 
@@ -107,4 +133,51 @@ exports.cancelReservation = asyncHandler( async (req, res, next) => {
     
 })
 
+// @desc    See which room is available based on our form
+// @route   POST /api/reservations/booking/checkUserCriteria
+// @access  Public
+exports.checkUserCriteria = asyncHandler( async (req, res, next) => {
+    const {user, adults, children, start, end} = req.body;
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    const allDates = getDatesInRange(startDate, endDate)
+    const maxPeople = adults + children;
+
+    const roomsAfterUserSearchCriteria = {};
+
+// Here are the rooms which can fit the number of guests
+    let rooms  = await Rooms.find({"maxPeople": maxPeople})
+
+// Check if there is AT LEAST one room that is available in this period of time
+    const allDatesTransformed = [];
+    allDates.forEach(element => {
+        allDatesTransformed.push(new Date(element));
+    })
+
+    let q = 0;
+    while (q < rooms.length) {
+        let i = 0;
+
+        while(i < rooms[q].roomNumbers.length) {
+            let ok = true; // There is no problem with the dates
+            let j = 0;
+            while (j < allDatesTransformed.length) {
+                for( let k = 0; k < rooms[q].roomNumbers[i].unavailableDates.length; k = k + 1)
+                    if(allDatesTransformed[j].toString() === rooms[q].roomNumbers[i].unavailableDates[k].toString())
+                        ok = false;
+                j = j + 1;
+            }
+            // console.log(ok, rooms[q].roomNumbers[i])
+            if(ok == true) {
+                    roomsAfterUserSearchCriteria.roomId = rooms[q]._id;
+                    roomsAfterUserSearchCriteria.name = rooms[q].title;
+                    roomsAfterUserSearchCriteria.price = rooms[q].price * ((endDate-startDate)/1000/60/60/24);
+                }
+
+                i = i + 1;
+            }
+            q = q + 1;
+        }
+        res.status(200).json({success: true, data: roomsAfterUserSearchCriteria})
+    })
 

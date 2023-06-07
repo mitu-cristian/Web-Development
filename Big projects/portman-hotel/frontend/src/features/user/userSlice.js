@@ -103,7 +103,7 @@ export const userSlice = createSlice({
             state.isSuccessMe = false;
             state.isSuccessMeAddReview = false;
             state.isLoadingMe = false;
-            state.messageMe = "";
+            state.messageMe = ""
         }
     },
     extraReducers: (builder) => {

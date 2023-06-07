@@ -14,7 +14,7 @@ exports.verifyUser = asyncHandler (async (req, res, next) => {
 
 // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await Users.findById(decoded.id)
+    req.user = await Users.findById(decoded.id).select("+isAdmin")
     if(req.user) {
         next();
     }

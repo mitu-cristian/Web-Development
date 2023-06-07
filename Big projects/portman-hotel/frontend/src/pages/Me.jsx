@@ -4,6 +4,8 @@ import {useNavigate} from "react-router-dom";
 
 // import components
 import ReviewItem from "../components/ReviewItem"
+import SeeMyReservations from "../components/SeeMyReservations";
+import Header from "../components/Header/Header";
 
 // Redux general
 import {useSelector, useDispatch} from "react-redux";
@@ -136,6 +138,8 @@ const onSubmitReview = (e) => {
   return (
   <>
 
+    <Header bookingForm = {false}/>
+
     {updateUserInfo &&
     <>
     <h1>Your user information are: </h1>
@@ -167,6 +171,7 @@ const onSubmitReview = (e) => {
   
       <button onClick = {deleteAccount}>Delete my account</button>
 
+{/* =================  review  =========================*/}
       {reviewMe ? <><ReviewItem key = {reviewMe._id} review = {reviewMe} user={true}/> <button onClick = {buttonDeleteMyReview}>Delete my review</button></>: 
       <><div>You have no review.</div> <button disabled = {!checkReviewMe} id="addReviewButton" onClick = {() => setAddReview(!addReview)}> {addReview ? "Cancel" : "Add a review"}</button> </>
       }
@@ -206,6 +211,8 @@ const onSubmitReview = (e) => {
     </form> 
     </>  
       }
+
+      <SeeMyReservations/>
   </>
   )
 }
