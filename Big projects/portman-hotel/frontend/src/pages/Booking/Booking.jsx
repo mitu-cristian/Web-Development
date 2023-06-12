@@ -2,6 +2,7 @@ import "./booking.css"
 
 // import components
 import Header from "../../components/Header/Header";
+import BookingForm from "../../components/BookingForm/BookingForm";
 import SingleRoomComponent from "../../components/RoomsComponents/SingleRoomComponent/SingleRoomComponent";
 import DoubleRoomComponent from "../../components/RoomsComponents/DoubleRoomComponent/DoubleRoomComponent";
 import TripleRoomComponent from "../../components/RoomsComponents/TripleRoomComponent/TripleRoomComponent";
@@ -23,7 +24,8 @@ function Booking() {
 
   return (
     <>
-      <Header bookingForm = {true} />
+      <Header bookingForm = {false} />
+      <BookingForm/>
 
       {(result != null && Object.keys(result).length === 0) && <div>For your requirement there is no room.</div>}
       {result == null && <div>Book now</div>}

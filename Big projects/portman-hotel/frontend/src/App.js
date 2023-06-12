@@ -5,8 +5,11 @@ import "react-toastify/dist/ReactToastify.css";
 // Import protect route
 import PrivateRoute from "./hooks/PrivateRoute";
 
+// Import components
+import Footer from "./components/Footer/Footer";
+
 // Import pages
-import Home from "./pages/Home";
+import Home from "./pages/Home/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Me from "./pages/Me";
@@ -35,6 +38,8 @@ function App() {
     </Routes>
     
     </Router>
+
+    <Footer/>
     </>
   );
 }

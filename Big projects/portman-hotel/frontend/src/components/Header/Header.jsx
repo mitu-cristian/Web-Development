@@ -1,3 +1,6 @@
+import "./header.css";
+import logo from "./images/logo.png";
+
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 import {useSelector, useDispatch} from "react-redux";
@@ -35,13 +38,53 @@ function Header({bookingForm}) {
 
   return (
   <>
-    {user ? 
+  <nav>
+    <div className="container">
+        <div className="logo">
+            <img className="logo-image" src={logo}/>
+            <Link to="/">Hotelul Portman</Link>
+        </div>
+        <div className="nav-buttons">
+
+        <ul className="header">
+            {user ? (
+            <>
+              <p>Bună, {user.firstname}!</p>
+              <button onClick={onLogout}>Logout</button>
+            </>
+            ) : 
+            <>  
+              <li>
+                <Link to="/login">Login</Link>
+              </li>
+              <li>
+                <Link to="/register">Register</Link>
+              </li>
+            </>}
+        </ul>
+
+        <ul className="nav">
+            <li>
+                <Link to="#">Camere</Link>
+            </li>
+            <li>
+                <Link to="#">Restaurant</Link>
+            </li>
+            <li>
+                <Link to="#">Contact</Link>
+            </li>
+        </ul>
+
+        </div>
+    </div>
+</nav>
+    {/* {user ? 
       (<button onClick={onLogout}>Logout</button>) : 
       (<div>
           <Link to="/login">Login</Link>
           <Link to="/register">Register</Link>
       </div>)
-    }
+    } */}
 
     {bookingForm && <BookingFormHome/>}
   </>
