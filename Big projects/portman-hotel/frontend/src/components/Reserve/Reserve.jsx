@@ -15,6 +15,7 @@ import {resetFo, getSingleRoom, addReservation} from "../../features/booking/boo
 function Reserve({setOpen, roomId}) {
     
     const {form, rooms, isLoadingFo, isSuccessFo, messageFo} = useSelector((state) => state.booking)
+    const {user} = useSelector((state) => state.auth)
     const dispatch = useDispatch();
 
     const [selectedRooms, setSelectedRooms] = useState([])
@@ -44,22 +45,22 @@ function Reserve({setOpen, roomId}) {
         for(let i = 0; i < roomNumber.unavailableDates.length; i = i + 1)
         unavailableDatesModified.push(new Date(roomNumber.unavailableDates[i]).getTime() - 3*60*60*1000)
 
-        console.log("allDatesLength", allDates.length)
-        console.log("unavailableMofidiedLength", unavailableDatesModified.length)
+        // console.log("allDatesLength", allDates.length)
+        // console.log("unavailableMofidiedLength", unavailableDatesModified.length)
 
         let available = true;
         let k = 0;
         while (k < allDates.length && available === true) {
             let j = 0;
             while (j < unavailableDatesModified.length && available === true) {
-                console.log(`allDates k = ${k}`, allDates[k])
-                console.log(`unavailableDates j = ${j}`, unavailableDatesModified[j])
+                // console.log(`allDates k = ${k}`, allDates[k])
+                // console.log(`unavailableDates j = ${j}`, unavailableDatesModified[j])
                 if(allDates[k] === unavailableDatesModified[j]) {
                     available = false
-                    console.log("available din interiorul if-ului", available)
+                    // console.log("available din interiorul if-ului", available)
                 }
-                console.log("Rezultatul este: ", available)
-                console.log("")
+                // console.log("Rezultatul este: ", available)
+                // console.log("")
                 j = j + 1;
             }
             k = k + 1;
@@ -101,7 +102,8 @@ function Reserve({setOpen, roomId}) {
                 />
             </div>
         ))}
-        <button onClick={handleClick}>Reserve now!</button>
+        {user && <button onClick={handleClick}>Reserve now!</button>}
+        {!user && <p>Doar utilizatorii care s-au înregistrat pot rezerva online un sejur.</p>}
     </div>
   )
 }

@@ -50,11 +50,11 @@ function BookingForm() {
 
     useEffect(() => {
         if(isSuccessFo) {
-            navigate("/booking")
             localStorage.setItem("adults", JSON.stringify(adultOption));
             localStorage.setItem("children", JSON.stringify(childOption));
             localStorage.setItem("startDate", JSON.stringify(date[0].startDate));
             localStorage.setItem("endDate", JSON.stringify(date[0].endDate));
+            navigate("/booking")
         }
         dispatch(resetFo())
     },[isSuccessFo, resetFo])

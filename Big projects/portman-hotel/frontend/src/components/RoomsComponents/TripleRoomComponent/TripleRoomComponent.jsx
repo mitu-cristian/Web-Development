@@ -1,27 +1,49 @@
 import "./tripleRoomComponent.css"
 
-import {useNavigate} from "react-router-dom";
+import {useState} from "react";
 
 // Redux general
 import {useSelector, useDispatch} from "react-redux";
 
+// Redux from booking store
+import {getSingleRoom} from "../../../features/booking/bookingSlice";
+
+// Import component
+import Reserve from "../../Reserve/Reserve";
+
 function TripleRoomComponent() {
 
+  const {isLoadingFo} = useSelector((state) => state.booking)
   const {form, result} = useSelector((state) => state.booking)
 
-  const startDate = new Date(form.start);
-  const endDate = new Date(form.end);
-  const nightsNo = (endDate.getTime() - startDate.getTime())/1000/60/60/24;
+  const dispatch = useDispatch();
 
-  const navigate = useNavigate();
+  let nightsNo;
+
+  if(form) {
+    const startDate = new Date(form.start);
+    const endDate = new Date(form.end);
+    nightsNo = (endDate.getTime() - startDate.getTime())/1000/60/60/24;
+  }
+
+  const [openModal, setOpenModal] = useState(false);
+  const handleClick = () => {
+    dispatch(getSingleRoom(result.roomId))
+    setOpenModal(!openModal)
+  }
+
+  if(isLoadingFo)
+    return <div>Loading...</div>
 
   return (
     <div>
       TripleRoomComponent is working
-      <div>Number of nights: {nightsNo}</div>
-      <div>Price: {result.price}</div>
-      <button>Book now</button>
-      <button onClick={() => navigate("/triple-room")} >Find more about this room.</button>
+      <div>Numărul de nopți: {nightsNo}</div>
+      <div>Prețul: {result.price}</div>
+      {/* <button onClick={() => navigate("/triple-room")} >Find more about this room.</button> */}
+      <button onClick={handleClick}>Rezervă</button>
+
+      {openModal && <Reserve setOpen = {setOpenModal} roomId = {result.roomId}/>}
     </div>
   )
 }
