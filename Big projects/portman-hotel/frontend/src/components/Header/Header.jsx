@@ -22,12 +22,12 @@ function Header({bookingForm}) {
     toast.error(message);
     
     if(!user && isSuccess ) {
-      toast.success("You have logged out from your account.");
+      toast.success("Deconectat.");
       navigate("/")
     }
 
     if(user && isSuccess)
-      toast.success("You are logged in.");
+      toast.success("Autentificat.");
 
     dispatch(reset())
   }, [isError, isSuccess, message, navigate, dispatch])
@@ -50,15 +50,15 @@ function Header({bookingForm}) {
             {user ? (
             <>
               <p>Bună, {user.firstname}!</p>
-              <button onClick={onLogout}>Logout</button>
+              <button onClick={onLogout}>Deconectare</button>
             </>
             ) : 
             <>  
               <li>
-                <Link to="/login">Login</Link>
+                <Link to="/login">Autentificare</Link>
               </li>
               <li>
-                <Link to="/register">Register</Link>
+                <Link to="/register">Înregistrare</Link>
               </li>
             </>}
         </ul>
@@ -78,13 +78,7 @@ function Header({bookingForm}) {
         </div>
     </div>
 </nav>
-    {/* {user ? 
-      (<button onClick={onLogout}>Logout</button>) : 
-      (<div>
-          <Link to="/login">Login</Link>
-          <Link to="/register">Register</Link>
-      </div>)
-    } */}
+
 
     {bookingForm && <BookingFormHome/>}
   </>
