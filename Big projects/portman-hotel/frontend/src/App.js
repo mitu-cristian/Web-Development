@@ -11,17 +11,19 @@ import Footer from "./components/Footer/Footer";
 // Import pages
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
+// import Register from "./pages/Register";
 import Me from "./pages/Me";
 import Booking from "./pages/Booking/Booking";
 import SingleRoom from "./pages/Rooms/SingleRoom/SingleRoom";
 import DoubleRoom from "./pages/Rooms/DoubleRoom/DoubleRoom";
 import TripleRoom from "./pages/Rooms/TripleRoom/TripleRoom";
+import Register from "./pages/Register/Register";
 
 function App() {
   return (
     <>
     <ToastContainer transition={Zoom} theme="colored" position="top-center"/>
+
     <Router>
 
     <Routes>
