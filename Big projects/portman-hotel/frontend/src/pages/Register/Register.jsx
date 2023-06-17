@@ -3,6 +3,12 @@ import faleza2 from "./img/faleza2.jpg";
 import logo from "./img/portman-hotel-website-favicon-white.png"
 
 import {useState, useEffect} from "react";
+import {useNavigate, Link} from "react-router-dom";
+
+// Redux
+import {toast} from "react-toastify"
+import {useSelector, useDispatch} from "react-redux";
+import {register, reset} from "../../features/auth/authSlice";
 
 // import components
 import Header from "../../components/Header/Header";
@@ -11,6 +17,24 @@ import RegisterFormInput from "../../components/RegisterFormInput/RegisterFormIn
 
 function Register() {
 
+    const navigate = useNavigate();
+
+    const dispatch = useDispatch();
+    const {user, isLoading, isError, isSuccess, message} = useSelector((state) => state.auth)
+
+    useEffect(() => {
+      if(isError)
+          toast.error(message);
+
+      if(isSuccess)
+          toast.success(message);
+
+      if(user) 
+          navigate("/");
+      
+      dispatch(reset());
+  }, [user, isError, isSuccess, message, navigate, dispatch] )
+
     const [values, setValues] = useState({
         firstname: "",
         lastname: "",
@@ -18,14 +42,8 @@ function Register() {
         password: "",
         confirmPassword: ""
       })
-    
-      const [validData, setValidData] = useState({
-        firstname: false,
-        lastname: false,
-        email: false,
-        password: false,
-        confirmPassword: false
-      })
+
+      const {firstname, lastname, email, password, confirmPassword} = values;
     
       function addBackslash(str) {
         return str.replace(/[$^*.?"{}|]/g, "\\$&");
@@ -36,12 +54,6 @@ function Register() {
       const input3 = document.getElementById("3");
       const input4 = document.getElementById("4");
       const input5 = document.getElementById("5");
-    
-      let input1Validity;
-
-      if(input1) {
-          input1Validity = input1.checkValidity()
-      }
 
       const inputs = [
         {
@@ -110,9 +122,12 @@ function Register() {
       const specialCharacter = /[!@#$%^&*(),.?\":{}|<>`~;/\[\]]/.test(values.password);
       const length = values.password.length > 7;
     
-      const handleSubmit = (e) => {
+      const onSubmit = (e) => {
         e.preventDefault();
-      }
+            const userData = {firstname, lastname, email, password};
+            dispatch(register(userData));
+    }
+
     
       const onChange = (e) => {
         setValues({...values, [e.target.name]: e.target.value})
@@ -138,7 +153,7 @@ function Register() {
 
                 <div className="logreg-box">
                     <div className="form-box">
-                        <form action="#" className="register-form">
+                        <form onSubmit={onSubmit} className="register-form">
                             <h2>Înregistrare</h2>
 
                             <div className="inputs">
@@ -146,10 +161,10 @@ function Register() {
                                 lowerCase = {lowerCase} upperCase = {upperCase} number = {number} specialCharacter = {specialCharacter}
                                 length = {length}
                                 />))}
-                                <button disabled = {checkValidity() === true ? false : true}>Submit</button>
+                                <button type="submit" className="button-86 form-register" disabled = {checkValidity() === true ? false : true}>Submit</button>
                             </div>
                             <div className="login-register">
-                                <p>Ai deja cont? <a href="#">Autentificare</a></p>
+                                <p>Ai deja cont? <Link to="/login">Autentificare</Link></p>
                             </div>
                         </form>
                     </div>

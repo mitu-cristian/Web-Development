@@ -3,7 +3,7 @@ import {useState, useRef} from "react";
 
 function RegisterFormInput(props) {
 
-    const {lowerCase, upperCase, number, specialCharacter, length, label, errorMessage, onChange, id, ...inputProps} = props;
+    const {login, lowerCase, upperCase, number, specialCharacter, length, label, errorMessage, onChange, id, ...inputProps} = props;
     const [focused, setFocused] = useState(false)
     const inputRef = useRef("")
 
@@ -34,14 +34,14 @@ function RegisterFormInput(props) {
 
 
 
-      {inputProps.name === "password"  && (
+      {(inputProps.name === "password" && login !== true)  ? (
       <>
       <div className={lowerCase ? 'info checked' : 'info'}>O literă mică.</div>
       <div className={upperCase ? 'info checked' : 'info'}>O literă mare.</div>
       <div className={number ? 'info checked' : 'info'}>Un număr.</div>
       <div className={specialCharacter ? 'info checked' : 'info'}>Un caracter special.</div>
       <div className={length ? 'info checked' : 'info'}>Lungime de cel puțin 8 caractere.</div>
-      </>)
+      </>) : ""
       }
     </div>
   )

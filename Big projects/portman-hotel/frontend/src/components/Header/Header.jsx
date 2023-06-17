@@ -50,7 +50,7 @@ function Header({bookingForm}) {
             {user ? (
             <>
               <p>Bună, {user.firstname}!</p>
-              <button onClick={onLogout}>Deconectare</button>
+              <button id="button" onClick={onLogout}>Deconectare</button>
             </>
             ) : 
             <>  
@@ -73,6 +73,10 @@ function Header({bookingForm}) {
             <li>
                 <Link to="#">Contact</Link>
             </li>
+
+            {
+              user && (<li> <Link className="my-account" to="/me">Contul meu</Link> </li>)
+            }
         </ul>
 
         </div>

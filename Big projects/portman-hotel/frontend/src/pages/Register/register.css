@@ -1,18 +1,4 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Raleway&family=Satisfy&display=swap');
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.container {
-    max-width: 1500px;
-    margin: 0 auto;
-    padding: 0 30px;
-} */
-
 .register-container {
-    /* min-height: calc(100vh - 180px); */
     margin-top: 30px;
     margin-bottom: 30px;
     display: flex;
@@ -212,4 +198,9 @@
 .register-container .login-register p a:hover::after {
     width: 100%;
 }
+
+.button-86.form-register {
+    margin: 20px auto;
+}
+
 
