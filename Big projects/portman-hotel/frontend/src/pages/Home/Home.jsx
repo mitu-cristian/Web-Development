@@ -35,11 +35,13 @@ function Home() {
 
   return (
     <>
-      <Header bookingForm = {false}/>
+      <Header/>
       <main>
         <div className="container">
-          <img className="hotel-image" src={hotel_image} alt="" />
-
+          <div className="hotel-image-container">
+            <img className="hotel-image" src={hotel_image} alt="" />
+          </div>
+          
           <div >
             <BookingForm/>
           </div>
@@ -108,9 +110,25 @@ function Home() {
           </div>
 
         </div>
+
+        {/* Avg rating: {avg}    */}
+        
+        
+        <div className="container">
+          <div className="user-reviews">
+
+            <div className="facilities-introduction">
+              <img id="facilty-image" src={facilities} alt=""/>
+              <h1>Părerile clienților</h1>
+            </div>
+
+            <Review/>  
+          </div>
+        </div>
+            
+
       </main>
-      Avg rating: {avg}   
-      {/* <Review/>    */}
+      
     </>
   )
 }

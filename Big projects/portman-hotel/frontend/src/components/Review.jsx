@@ -1,5 +1,8 @@
+// import style
+import "./review.css";
+
 // import components
-import ReviewItem from "./ReviewItem";
+import ReviewItem from "./ReviewItem/ReviewItem";
 
 import {useEffect} from "react";
 
@@ -24,7 +27,9 @@ function Review() {
 
   return (
     <>
-      Avg rating: {avg}
+      <div id="note-clientilor">
+        Nota clienților: {avg}/5
+      </div>
       {reviews.map((review) => (<ReviewItem key={review._id} review = {review} user={false}/>))}
     </>
   )

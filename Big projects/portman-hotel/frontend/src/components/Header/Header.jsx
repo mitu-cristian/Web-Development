@@ -7,9 +7,7 @@ import {useSelector, useDispatch} from "react-redux";
 import {logout, reset} from "../../features/auth/authSlice";
 import {toast} from "react-toastify";
 
-import BookingFormHome from "../BookingFormHome/BookingFormHome";
-
-function Header({bookingForm}) {
+function Header() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -68,7 +66,7 @@ function Header({bookingForm}) {
                 <Link to="#">Camere</Link>
             </li>
             <li>
-                <Link to="#">Restaurant</Link>
+                <Link to="/booking">Rezervare</Link>
             </li>
             <li>
                 <Link to="#">Contact</Link>
@@ -83,8 +81,6 @@ function Header({bookingForm}) {
     </div>
 </nav>
 
-
-    {bookingForm && <BookingFormHome/>}
   </>
   )
 }

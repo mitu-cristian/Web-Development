@@ -2,7 +2,7 @@ import {useEffect} from "react";
 import {toast} from "react-toastify";
 
 // import components
-import SeeMyReservationsItem from "./SeeMyReservationsItem";
+import SeeMyReservationsItem from "./SeeMyReservationsItem/SeeMyReservationsItem";
 
 // Redux general
 import {useSelector, useDispatch} from "react-redux";

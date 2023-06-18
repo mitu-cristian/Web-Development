@@ -1,0 +1,70 @@
+.my-review #title-review {
+    font-size: 30px;
+    font-family: "Poppins";
+}
+
+.my-review #title-review span {
+    font-size: 20px;
+    letter-spacing: 0px;
+}
+
+.my-review #description-review {
+    font-size: 30px;
+    font-family: "Poppins";
+}
+
+.my-review #description-review span {
+    font-size: 20px;
+    letter-spacing: 0px;
+}
+
+.my-review #rating-review {
+    font-size: 30px;
+    font-family: "Poppins";
+}
+
+.my-review #rating-review span {
+    font-size: 20px;
+    letter-spacing: 0px;
+}
+
+.my-review #user-review {
+    font-size: 30px;
+    font-family: "Poppins";
+}
+
+.my-review #user-review span{
+    font-size: 20px;
+    letter-spacing: 0px;
+}
+
+.my-review #created-at {
+    font-size: 30px;
+    font-family: "Poppins";
+}
+
+.my-review #created-at span {
+    font-size: 20px;
+    letter-spacing: 0px;
+}
+
+.my-review #updated-at {
+    font-size: 30px;
+    font-family: "Poppins";
+}
+
+.my-review #updated-at span {
+    font-size: 20px;
+    letter-spacing: 0px;
+}
+
+#review-description {
+    font-size: 17px;
+    margin-top: 20px;
+    font-family: "Poppins";
+}
+
+#radio-button-text {
+    font-family: "Poppins";
+    font-size: 20px;
+}

@@ -17,6 +17,8 @@
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+  border-radius: 10px;
 }
 
 .button-86::after,
@@ -63,4 +65,10 @@
 .button-86:active::after {
   transition: 0s;
   transform: translate(0, 5%);
+}
+
+/* For forms */
+
+.button-86:disabled::before {
+  background: gray;
 }

@@ -14,7 +14,7 @@ import Register from "./pages/Register/Register";
 import Login from "./pages/Login/Login";
 // import Login from "./pages/Login";
 // import Register from "./pages/Register";
-import Me from "./pages/Me";
+import Me from "./pages/Me/Me";
 import Booking from "./pages/Booking/Booking";
 import SingleRoom from "./pages/Rooms/SingleRoom/SingleRoom";
 import DoubleRoom from "./pages/Rooms/DoubleRoom/DoubleRoom";
