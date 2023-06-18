@@ -119,7 +119,7 @@ function Home() {
 
             <div className="facilities-introduction">
               <img id="facilty-image" src={facilities} alt=""/>
-              <h1>Părerile clienților</h1>
+              <h1>Rating {avg}/5</h1>
             </div>
 
             <Review/>  

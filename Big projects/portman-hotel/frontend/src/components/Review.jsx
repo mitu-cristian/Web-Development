@@ -18,7 +18,7 @@ function Review() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(avgRating());
+        // dispatch(avgRating());
         dispatch(getReviews())
     }, [])
 
@@ -27,9 +27,9 @@ function Review() {
 
   return (
     <>
-      <div id="note-clientilor">
+      {/* <div id="note-clientilor">
         Nota clienților: {avg}/5
-      </div>
+      </div> */}
       {reviews.map((review) => (<ReviewItem key={review._id} review = {review} user={false}/>))}
     </>
   )
