@@ -49,12 +49,6 @@ function Register() {
         return str.replace(/[$^*.?"{}|]/g, "\\$&");
       }
 
-      const input1 = document.getElementById("1");
-      const input2 = document.getElementById("2");
-      const input3 = document.getElementById("3");
-      const input4 = document.getElementById("4");
-      const input5 = document.getElementById("5");
-
       const inputs = [
         {
           id: 1,
@@ -106,6 +100,11 @@ function Register() {
 
     
     function checkValidity() {
+      let input1 = document.getElementById("1");
+      let input2 = document.getElementById("2");
+      let input3 = document.getElementById("3");
+      let input4 = document.getElementById("4");
+      let input5 = document.getElementById("5");
       if(input1 && input2 && input3 && input4 && input5) {
         if(input1.checkValidity() && input2.checkValidity() && input3.checkValidity && input4.checkValidity() && input5.checkValidity() &&
         values.password === values.confirmPassword)

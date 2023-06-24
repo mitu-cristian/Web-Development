@@ -11,7 +11,7 @@ import conference from "./images/conference.jpg";
 import parking from "./images/parking.jpg";
 import tourist_spots from "./images/tourist-spots.png";
 
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 // import components
 import Review from "../../components/Review";
@@ -22,16 +22,63 @@ import BookingForm from "../../components/BookingForm/BookingForm";
 import {useSelector, useDispatch} from "react-redux";
 
 // Redux for the review store
-import {avgRating, getReviews} from "../../features/review/reviewSlice";
+import {avgRating, getReviews, reset} from "../../features/review/reviewSlice";
 
 function Home() {
 
-  const {avg} = useSelector((state) => state.review);
+  const {avg, reviews, isSuccessReviewPagination} = useSelector((state) => state.review);
   const dispatch = useDispatch();
+
+  const [pagination, setPagination] = useState("");
 
   useEffect(() => {
     dispatch(avgRating());
-  })
+  }, [])
+
+  useEffect(() => {
+    if(isSuccessReviewPagination) 
+      setPagination(reviews.pagination)
+    dispatch(reset())
+  }, [isSuccessReviewPagination, dispatch])
+
+  const [selectedValue, setSelectedValue] = useState(JSON.parse(localStorage.getItem("rating")))
+
+  const handleSelectChange = (event) => {
+    console.log(event.target.value)
+    const userData = {
+      "rating": event.target.value,
+      "page": 1
+    }
+    localStorage.setItem("rating", JSON.stringify(event.target.value))
+    setSelectedValue(event.target.value)
+    dispatch(getReviews(userData))
+  }
+
+// =================  Functionality for the "Next page" button
+  const nextPageFunction = () => {
+    if(reviews.pagination.next?.page)
+    dispatch(getReviews({"rating": JSON.parse(localStorage.getItem("rating")), "page": reviews.pagination.next.page}))
+  }
+
+  const disableNextPageButton = () => {
+    if(!pagination.next?.page || reviews.count === 0)
+      return true;
+    else 
+      return false;
+  }
+
+// ======================== Functionality for the "Previous page" button
+  const prevPageFunction = () => {
+    if(reviews.pagination.prev?.page)
+      dispatch(getReviews({"rating": JSON.parse(localStorage.getItem("rating")), "page": reviews.pagination.prev.page}))
+  }
+
+  const disablePrevPageButton = () => {
+    if(!pagination.prev?.page)
+      return true;
+    else  
+      return false;
+  }
 
   return (
     <>
@@ -121,8 +168,26 @@ function Home() {
               <img id="facilty-image" src={facilities} alt=""/>
               <h1>Rating {avg}/5</h1>
             </div>
+            
+            <label>Filtrează: </label>
+            <select name="cars" id="cars" onChange={handleSelectChange} value={selectedValue}>
+              <option value="all">Toate recenziile</option>
+              <option value="5">Recenzii cu 5 stele</option>
+              <option value="4">Recenzii cu 4 stele</option>
+              <option value="3">Recenzii cu 3 stele</option>
+              <option value="2">Recenzii cu 2 stele</option>
+              <option value="1">Recenzii cu o stea</option>
+            </select>
 
             <Review/>  
+            
+            <button 
+              onClick = {prevPageFunction} disabled = {disablePrevPageButton() === true ? true : false}
+              >Previous page</button>
+            <button 
+              onClick = {nextPageFunction} disabled = {disableNextPageButton() === true ? true : false}
+              >
+                Next page</button>
           </div>
         </div>
             

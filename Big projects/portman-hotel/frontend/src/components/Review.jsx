@@ -14,12 +14,15 @@ import {avgRating, getReviews, reset} from "../features/review/reviewSlice";
 
 function Review() {
 
-    const{avg, reviews, isError, isLoading, isSuccess, message} = useSelector((state) => state.review);
+    const{avg, reviews, isError, isLoading, isSuccess, message, rating} = useSelector((state) => state.review);
     const dispatch = useDispatch();
 
     useEffect(() => {
         // dispatch(avgRating());
-        dispatch(getReviews())
+        dispatch(getReviews({
+          rating: rating,
+          page: 1
+        }))
     }, [])
 
     if(!reviews)
@@ -30,7 +33,8 @@ function Review() {
       {/* <div id="note-clientilor">
         Nota clienților: {avg}/5
       </div> */}
-      {reviews.map((review) => (<ReviewItem key={review._id} review = {review} user={false}/>))}
+      {reviews.data.map((review) => (<ReviewItem key={review._id} review = {review} user={false}/>))}
+      {reviews.count === 0 && <h1>Nu există nicio recenzie pentru opțiunea selectată.</h1>}
     </>
   )
 }

@@ -32,7 +32,7 @@ exports.registerUser = asyncHandler (async (req, res, next) => {
     const users = await Users.findOne({"email": email})
     if(users) {
         console.log(users)
-        return next(new ErrorResponse(`There is already an account registered with the email address ${email}.`, 403))
+        return next(new ErrorResponse(`Există deja un cont înregistrat cu adresa de email ${email}.`, 403))
     }
     const user = await Users.create({firstname, lastname, email, password});
     sendTokenResponse (user, 201, res, message = undefined);

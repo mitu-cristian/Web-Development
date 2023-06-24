@@ -40,7 +40,8 @@
     border-radius: 0;
     color: white;
   }
-  .input-content .inputbox-content input:focus ~ label, .input-content .inputbox-content input:valid ~ label {
+  .input-content .inputbox-content input:focus ~ label, .input-content .inputbox-content input:valid ~ label,
+  .input-content .inputbox-content input:invalid ~ label {
     color: white;
     transform: translateY(-20px);
     font-size: 0.825em;
@@ -64,10 +65,10 @@
     content: '';
     display: block;
     position: absolute;
-    bottom: -1px;
+    bottom: 0px;
     left: 0;
     width: 0;
-    height: 2px;
+    height: 3px;
     /* background: rgb(255, 153, 0); */
     background: #183456;
     transition: all 200ms ease-out;

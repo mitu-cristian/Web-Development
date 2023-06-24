@@ -45,9 +45,6 @@ function Login() {
         return str.replace(/[$^*.?"{}|]/g, "\\$&");
       }
 
-      const input1 = document.getElementById("1");
-      const input2 = document.getElementById("2");
-
       const inputs = [
         {
           id: 1,
@@ -71,6 +68,9 @@ function Login() {
 
     
     function checkValidity() {
+      let input1 = document.getElementById("1");
+      let input2 = document.getElementById("2");
+
       if(input1 && input2) {
         if(input1.checkValidity() && input2.checkValidity())
           return true;

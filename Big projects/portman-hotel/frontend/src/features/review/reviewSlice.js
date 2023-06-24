@@ -1,13 +1,17 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
 import reviewService from "./reviewService";
 
+const rating = JSON.parse(localStorage.getItem("rating"));
+
 const initialState = {
     avg: null,
     reviews: null,
     isError: false,
     isSuccess: false,
-    isLoading: false,
-    message: ""
+    isSuccessReviewPagination: false,
+    // isLoading: false,
+    message: "",
+    rating: rating ? rating : "all"
 }
 
 // Average rating
@@ -23,9 +27,9 @@ export const avgRating = createAsyncThunk("review/avgRating", async(thunkAPI) =>
 })
 
 // See reviews
-export const getReviews = createAsyncThunk("review/getReviews", async(thunkAPI) => {
+export const getReviews = createAsyncThunk("review/getReviews", async(userData, thunkAPI) => {
     try {
-        return await reviewService.getReviews();
+        return await reviewService.getReviews(userData);
     }
 
     catch(error) {
@@ -52,7 +56,8 @@ export const reviewSlice = createSlice({
         reset: (state) => {
             state.isError = false;
             state.isSuccess = false;
-            state.isLoading = false;
+            state.isSuccessReviewPagination = false;
+            // state.isLoading = false;
             state.message = "";
         }
     },
@@ -66,8 +71,13 @@ export const reviewSlice = createSlice({
             })
 
 // See reviews
+            .addCase(getReviews.pending, (state) => {
+                // state.isLoading = true;
+            })
             .addCase(getReviews.fulfilled, (state, action) => {
                 state.reviews = action.payload;
+                state.isSuccessReviewPagination = true;
+                // state.isLoading = false;
             })
         
 // Update review

@@ -64,7 +64,7 @@ const formatDate = (dateString) => {
             Status: {reservation.status === "completed" && "efectuat"}{reservation.status === "new" && "inițiat"} {reservation.status === "canceled" && "anulat"}
         </div>
 
-        <button className="button-86 me-page" disabled={reservation.status === "completed"} onClick = {() => dispatch(cancelMyReservation(reservation._id))}>Anulează rezervarea</button>
+        <button className="button-86 me-page" disabled={reservation.status === "completed" || reservation.status === "canceled"} onClick = {() => dispatch(cancelMyReservation(reservation._id))}>Anulează rezervarea</button>
 
         <br></br>
     </section>

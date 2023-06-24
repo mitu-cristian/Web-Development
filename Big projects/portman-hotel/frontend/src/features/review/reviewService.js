@@ -11,10 +11,16 @@ const avgRating = async () => {
 }
 
 // See all reviews
-const getReviews = async () => {
-    const response = await axios.get(API_URL + "all");
+const getReviews = async (userData) => {
+    const {rating, page} = userData;
+    // console.log(userData.rating)
+    let response;
+    if(rating === "all")
+        response = await axios.get(API_URL + `all?limit=3&page=${page}`)
+    else
+        response = await axios.get(API_URL + `all?limit=3&page=${page}&rating=${rating}`);
     if(response.data.success === true)
-        return response.data.data;
+        return response.data;
     else return response.data;
 }
 

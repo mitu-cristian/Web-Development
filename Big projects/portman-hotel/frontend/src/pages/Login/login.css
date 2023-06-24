@@ -134,7 +134,8 @@
 }
 
 .register-container .input-box input:focus~label,
-.register-container .input-box input:valid~label {
+.register-container .input-box input:valid~label,
+.register-container .input-box input:invalid~label {
     top: -2px;
 }
 
