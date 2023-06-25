@@ -1,4 +1,5 @@
 import "./singleRoomComponent.css";
+import single_room from "../images/SingleRoom.jpg";
 
 import {useState} from "react";
 
@@ -20,11 +21,12 @@ function SingleRoomComponent() {
 
   let nightsNo;
 
-  if(form) {
-    const startDate = new Date(form.start);
-    const endDate = new Date(form.end);
-    nightsNo = (endDate.getTime() - startDate.getTime())/1000/60/60/24;
-  }
+  const startDateLS = JSON.parse(localStorage.getItem("startDate"))
+  const endDateLS = JSON.parse(localStorage.getItem("endDate")) 
+
+  const startDate = new Date(startDateLS);
+  const endDate = new Date(endDateLS);
+  nightsNo = (endDate.getTime() - startDate.getTime())/(1000*60*60*24);
 
   const [openModal, setOpenModal] = useState(false);
   const handleClick = () => {
@@ -36,15 +38,18 @@ function SingleRoomComponent() {
     return <div>Loading...</div>
 
   return (
-    <div>
-     SingleRoom is working
-     <button>Rezervă</button>
-     <div>Numărul de nopți: {nightsNo}</div>
-     <div>Prețul: {result.price}</div>
-     {/* <button onClick={() => navigate("/single-room")} >Find more about this room</button> */}
-     <button onClick={handleClick}>Rezervă</button>
-    {openModal && <Reserve setOpen = {setOpenModal} roomId = {result.roomId}/>}
-    </div>
+
+      <div className="box-room">
+        <img src={single_room} alt="" />
+        <h2>Cameră single</h2>
+        <div>Număr de nopți: {nightsNo}</div>
+        <div>Preț: {result.price}</div>
+        <button className="button-86" onClick={handleClick}>
+          {openModal === false ? "Rezervă" : "Anulează"}
+        </button>
+        {openModal && <Reserve setOpen = {setOpenModal} roomId = {result.roomId}/>}
+      </div>
+
   )
 }
 

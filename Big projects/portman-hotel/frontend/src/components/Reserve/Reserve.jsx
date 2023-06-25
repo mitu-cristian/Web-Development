@@ -1,7 +1,5 @@
 import "./reserve.css";
 import {toast} from "react-toastify";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCircleXmark} from "@fortawesome/free-solid-svg-icons";
 
 // React general
 import {useState, useEffect} from "react";
@@ -20,11 +18,6 @@ function Reserve({setOpen, roomId}) {
 
     const [selectedRooms, setSelectedRooms] = useState([])
 
-    useEffect(() => {
-        if(isSuccessFo && messageFo)
-            toast.success(messageFo)
-    }, [dispatch, isSuccessFo, messageFo])
-
     const getDatesInRange = (startDate, endDate) => {
         const start = new Date(startDate);
         const end = new Date(endDate);
@@ -38,12 +31,15 @@ function Reserve({setOpen, roomId}) {
         return list;
     }
 
-    const allDates = getDatesInRange(form.start, form.end)
+    const startDateLS = JSON.parse(localStorage.getItem("startDate"));
+    const endDateLS = JSON.parse(localStorage.getItem("endDate"));
+
+    const allDates = getDatesInRange(startDateLS, endDateLS)
     
     const isAvailable = (roomNumber) => {
         const unavailableDatesModified = []
         for(let i = 0; i < roomNumber.unavailableDates.length; i = i + 1)
-        unavailableDatesModified.push(new Date(roomNumber.unavailableDates[i]).getTime() - 3*60*60*1000)
+        unavailableDatesModified.push(new Date(roomNumber.unavailableDates[i]).getTime() )
 
         // console.log("allDatesLength", allDates.length)
         // console.log("unavailableMofidiedLength", unavailableDatesModified.length)
@@ -78,11 +74,26 @@ function Reserve({setOpen, roomId}) {
     const handleClick = async () => {
             await Promise.all(selectedRooms.map((roomId) => {
                const userData = {
-                    roomId, form
+                    roomId, "form" : {
+                        "adults": JSON.parse(localStorage.getItem("adults")),
+                        "children": JSON.parse(localStorage.getItem("children")),
+                        "start": JSON.parse(localStorage.getItem("startDate")),
+                        "end": JSON.parse(localStorage.getItem("endDate"))
+                    }
                 }
+                // console.log(userData)
+                setOpen(false);
                 dispatch(addReservation(userData))
+                toast.success("Rezervarea a fost procesată.")
             }))
         
+    }
+
+    const checkValidity = () => {
+        if(selectedRooms.length > 0)
+            return true;
+        else
+            return false;
     }
 
     if(isLoadingFo)
@@ -91,18 +102,18 @@ function Reserve({setOpen, roomId}) {
   return (
     <div className="reserve">
         <div className="rContainer">
-            <FontAwesomeIcon icon={faCircleXmark} className="rClose" onClick={() => setOpen(false)}/>
-            <span>Select your rooms:</span>
+            {/* <FontAwesomeIcon icon={faCircleXmark} className="rClose" onClick={() => setOpen(false)}/> */}
+            <span>Alege numărul camerei</span>
         </div>
         {rooms.roomNumbers.map(roomNumber => (
             <div className="room" key={roomNumber._id}>
                 <label> {roomNumber.number} </label>
-                <input type="checkbox" value={roomNumber._id} onChange={handleSelect} 
+                <input type="checkbox" id="checkbox" value={roomNumber._id} onChange={handleSelect} 
                 disabled={!isAvailable(roomNumber)}
                 />
             </div>
         ))}
-        {user && <button onClick={handleClick}>Reserve now!</button>}
+        {user && <button disabled = {checkValidity() === true ? false : true} className="button-86" onClick={handleClick}>Rezervă</button>}
         {!user && <p>Doar utilizatorii care s-au înregistrat pot rezerva online un sejur.</p>}
     </div>
   )

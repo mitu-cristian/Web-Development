@@ -63,7 +63,7 @@ function Header() {
 
         <ul className="nav">
             <li>
-                <Link to="#">Camere</Link>
+                <Link to="/rooms">Camere</Link>
             </li>
             <li>
                 <Link to="/booking">Rezervare</Link>

@@ -1,5 +1,8 @@
 import "./booking.css"
 
+// import images
+import hotel_image from "../Home/images/hotel-image.jpg";
+
 // import components
 import Header from "../../components/Header/Header";
 import BookingForm from "../../components/BookingForm/BookingForm";
@@ -24,15 +27,22 @@ function Booking() {
 
   return (
     <>
-      <Header bookingForm = {false} />
-      <BookingForm/>
+      {/* <Header/>
+      <main>
+        <div className="container">
+          <div className="hotel-image-container">
+            <img className="hotel-image" src={hotel_image} alt="" />
+          </div>
+          <BookingForm/> */}
 
-      {(result != null && Object.keys(result).length === 0) && <div>For your requirement there is no room.</div>}
-      {result == null && <div>Book now</div>}
+          {(result != null && Object.keys(result).length === 0) && <h1 className="message-booking">Pentru cerințele dvs. nu este nicio cameră disponibilă.</h1>}
+          {/* {result == null && <div>Book now</div>} */}
 
-      {(result && result.name == "SingleRoom") && <SingleRoomComponent/>}
-      {(result && result.name == "DoubleRoom") && <DoubleRoomComponent/>}
-      {(result && result.name == "TripleRoom") && <TripleRoomComponent/>}
+          {(result && result.name == "SingleRoom") && <SingleRoomComponent/>}
+          {(result && result.name == "DoubleRoom") && <DoubleRoomComponent/>}
+          {(result && result.name == "TripleRoom") && <TripleRoomComponent/>}
+        {/* </div> */}
+      {/* </main> */}
     </>
   )
 }

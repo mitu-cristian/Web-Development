@@ -200,14 +200,7 @@ function checkValidity_add_user_review() {
   return (
   <>
 
-    <Header/>
-    <main>
-    <div className="container">
-      <div className="hotel-image-container">
-        <img className="hotel-image" src={hotel_image} alt="" />
-      </div>
-    </div>
-    </main>
+  <div className="container">
 
     <h1 id="contul-meu">Contul meu</h1>
 
@@ -414,6 +407,8 @@ function checkValidity_add_user_review() {
     <div className="container">
       <SeeMyReservations/>
     </div>
+
+  </div>
   </>
   )
 }

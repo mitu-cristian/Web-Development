@@ -4,7 +4,7 @@ import bookingService from "./bookingService";
 const adults = JSON.parse(localStorage.getItem("adults"));
 const children = JSON.parse(localStorage.getItem("children"));
 const startDate = JSON.parse(localStorage.getItem("startDate"));
-const endDate = JSON.parse(localStorage.getItem("endDate"))
+const endDate = JSON.parse(localStorage.getItem("endDate"));
 
 const initialState = {
     form: (adults != null && children != null && startDate != null && endDate != null) ? {
@@ -92,7 +92,7 @@ export const bookingSlice = createSlice({
 // Add reservation
             .addCase(addReservation.fulfilled, (state) => {
                 state.isSuccessFo = true;
-                state.messageFo = "Your reservation has been successfully added."
+                state.messageFo = "Rezervarea a fost procesată."
             })
     }
 })

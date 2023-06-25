@@ -82,17 +82,7 @@ function Home() {
 
   return (
     <>
-      <Header/>
-      <main>
-        <div className="container">
-          <div className="hotel-image-container">
-            <img className="hotel-image" src={hotel_image} alt="" />
-          </div>
-          
-          <div >
-            <BookingForm/>
-          </div>
-          
+        <div className="container">          
           <div className="facilities">
             <div className="facilities-introduction">
               <img id="facilty-image" src={facilities} alt=""/>
@@ -181,18 +171,20 @@ function Home() {
 
             <Review/>  
             
-            <button 
-              onClick = {prevPageFunction} disabled = {disablePrevPageButton() === true ? true : false}
-              >Previous page</button>
-            <button 
-              onClick = {nextPageFunction} disabled = {disableNextPageButton() === true ? true : false}
-              >
-                Next page</button>
+            <div className="buttons-container">
+              <button className="ghost-button" 
+                onClick = {prevPageFunction} disabled = {disablePrevPageButton() === true ? true : false}
+                >Pagina anterioară</button>
+              <button className="ghost-button"
+                onClick = {nextPageFunction} disabled = {disableNextPageButton() === true ? true : false}
+                >
+                  Pagina următoare</button>
+              </div>
           </div>
         </div>
             
 
-      </main>
+
       
     </>
   )

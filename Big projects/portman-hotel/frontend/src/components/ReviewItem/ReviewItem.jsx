@@ -8,6 +8,7 @@ import {useSelector, useDispatch} from "react-redux";
 
 // Redux for the user store
 import {updateReview, reset} from "../../features/review/reviewSlice";
+import {getMyReview} from "../../features/user/userSlice";
 
 function ReviewItem({review, user}) {
   
@@ -33,14 +34,15 @@ function ReviewItem({review, user}) {
       toast.error(message);
     else if(isSuccess) {
 // Change existing review
-      const divTitle = document.getElementById("title");
-      divTitle.textContent = title;
-      const divRating = document.getElementById("rating");
-      divRating.textContent = rating;
-      const divDescription = document.getElementById("description");
-      divDescription.textContent = description;
-      updatedAt = formatDate(new Date())
-      toast.success("Your review has been updated.");
+      // const divTitle = document.getElementById("review-title");
+      // divTitle.textContent = title;
+      // // const divRating = document.getElementById("rating");
+      // // divRating.textContent = rating;
+      // const divDescription = document.getElementById("review-description");
+      // divDescription.textContent = description;
+      // updatedAt = formatDate(new Date())
+      dispatch(getMyReview())
+      toast.success("Recenzia dvs. a fost actualizată.");
     }
     dispatch(reset())
   }, [isError, isSuccess, message, reset])
@@ -100,7 +102,6 @@ function ReviewItem({review, user}) {
                 <div className="underline-me"></div>
                 <label >Titlu</label></dd></dl></div></section></div></div>
 
-        {/* <input type="text" value={title} onChange = {(e) => setTitle(e.target.value)} /> */}
         <div id="radio-button-text">Nota</div>
         <ul className="rating">
           <li>
@@ -125,7 +126,6 @@ function ReviewItem({review, user}) {
           </li>
         </ul>
         
-        {/* <input type="text" id="review-description" value={description} onChange = {(e) => setDescription(e.target.value)} required /> */}
         <textarea name="description" id="review-description" value={description} cols="30" rows="10" onChange = {(e) => setDescription(e.target.value)}>
           
         </textarea>
@@ -138,12 +138,6 @@ function ReviewItem({review, user}) {
     
     <div className="my-review-container">
     <section className="my-review">
-      {/* <div id="title-review">Titlu: <span>{review.title}</span></div>
-      <div id="description-review">Descriere: <span>{review.description}</span> </div>
-      <div id="rating-review">Nota: <span>{review.rating}</span></div>
-      {!user && <div id="user-review">Dl./Dna.: <span>{review.user.firstname} {review.user.lastname}</span></div>}
-      <div id="created-at">Postat: <span>{createdAt}</span>  </div>
-      {createdAt !== updatedAt && <div id="updated-at">Actualizat: <span>{updatedAt}</span> </div>} */}
 
       <div className="review-header">
 
