@@ -1,6 +1,6 @@
 import {useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {postAdded} from "./postsSlice";
+import {addNewPost} from "./postsSlice";
 import { selectAllUsers } from "../users/usersSlice";
 
 const AddPostForm = () => {
@@ -8,6 +8,7 @@ const AddPostForm = () => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [userId, setUserId] = useState("");
+    const [addRequestStatus, setAddRequestStatus] = useState("idle");
     const dispatch = useDispatch();
     const users = useSelector(selectAllUsers);
 
@@ -17,14 +18,24 @@ const AddPostForm = () => {
         </option>
     ));
 
-    const canSave = Boolean(title) && Boolean(content) && Boolean(userId);
+    const canSave = [title, content, userId].every(Boolean) && addRequestStatus === "idle";
 
     const onSavePostClicked = () => {
-        if(title && content) {
-            dispatch(postAdded(title, content, userId))
-            setTitle("");
-            setContent("");
-            // setUser("");
+        if(canSave) {
+            try {
+                setAddRequestStatus("pending");
+                // Due to unwrap, it can throw an error if it is rejected
+                dispatch(addNewPost({title, body: content, userId})).unwrap();
+                setTitle("");
+                setContent("");
+                setUserId("");
+            }
+            catch(error) {
+                console.error("Failed to save the post", error);
+            }
+            finally {
+                setAddRequestStatus("idle");
+            }
         }
         
     }

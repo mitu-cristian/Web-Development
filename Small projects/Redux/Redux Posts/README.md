@@ -1,5 +1,5 @@
-> Takeaways
-------------
+#Improvements
+
 - refactor the slice file from this:
 ```javascript
 const postsSlice = createSlice({
@@ -47,3 +47,31 @@ prepare(title, content, userId) {
 and import it like this
 `import { selectAllPosts } from "./postsSlice";`
 
+# Redux Toolkit with a backend 
+## Setup
+- `npm install axios`
+- `import {createAsyncThunk} from "@reduxjs/toolkit"`
+- example for a get request
+```javascript
+export const fetchPosts = createAsyncThunk("posts/fetchPosts", async() => {
+    try {
+        const response = await axios.get(POSTS_URL);
+        return response.data;
+    }
+    catch(error) {
+        return error.message;
+    }
+})
+```
+- add extraReducers in the slice file
+```javascript
+const postsSlice = createSlice({
+    name: "posts",
+    initialState,
+    reducers: {...}.
+	extraReducers(builder) {
+        builder
+            .addCase(fetchPosts.pending, (state, action) => {
+                state.status = "loading";
+            }) } } )
+```
