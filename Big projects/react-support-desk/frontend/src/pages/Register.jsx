@@ -1,84 +1,98 @@
-import {useState, useEffect} from "react";
-import {useNavigate} from "react-router-dom";
-import {FaUser} from "react-icons/fa";
-import {toast} from "react-toastify";
-import {useSelector, useDispatch} from "react-redux";
-import {register, reset} from "../features/auth/authSlice";
-import {selectAuthSlice} from "../features/auth/authSlice";
+import {useState, useEffect} from 'react';
+import {FaUser} from 'react-icons/fa';
+import {toast} from 'react-toastify';
+// useSelector to select from the global state
+import {useSelector, useDispatch} from 'react-redux';
+import {register, reset} from '../features/auth/authSlice';
+import {useNavigate} from 'react-router-dom';
+import Spinner from '../components/Spinner';
 
-const Register = () => {
+function Register() {
 
     const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        password: "",
-        cofirmPassword: ""
+        name: '',
+        email: '',
+        password: '',
+        password2: ''
     })
 
-    const {name, email, password, confirmPassword} = formData;
+    const {name, email, password, password2} = formData;
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const {user, isLoading, isError, isSuccess, message} = useSelector(selectAuthSlice);
-
+    const {user, isLoading, isSuccess, isError, message} = useSelector(state => state.auth)
+    
     useEffect(() => {
-        if(isError) {
-            toast.error(message);
-        }
-        if(isSuccess || user) {
-            navigate("/");
-        }
+        if(isError)
+            toast(message) 
 
-        dispatch(reset());
-    }, [isError, isSuccess, user, message, navigate]);
+// Redirect when logged in
+        if(isSuccess ||  user) 
+            navigate('/');
 
-    const onChange = (event) => {
+        dispatch(reset())
+    },[isError, isSuccess, user, message, navigate, dispatch])
+
+    const onChange = (e) => {
         setFormData((prevState) => ({
-            ...prevState, 
-            [event.target.name]: event.target.value
+            ...prevState,
+            [e.target.name]: e.target.value
         }))
     }
 
-    const onSubmit = (event) => {
-        event.preventDefault();
-        if(password !== confirmPassword) {
-            toast.error("Passwords do not match");
-        }
+    const onSubmit = (e) => {
+        e.preventDefault();
+
+        if(password !== password2) 
+            toast('Passwords do not match')
         else {
-            const userData = {name, email, password};
-            dispatch(register(userData));
+            const userData = { name, email, password};
+            dispatch(register(userData))
         }
-        
     }
 
-    if(isLoading) {
+    if(isLoading)
         return <Spinner/>
-    }
 
-  return (
-    <>
+    return (
+      <>
         <section className="heading">
             <h1>
-                <FaUser/> Register
+                <FaUser/> Register 
             </h1>
-            <p>Please create an account</p>
+            <p>Please create an account.</p>
         </section>
 
         <section className="form">
-            <form onSubmit = {onSubmit}> 
+            <form onSubmit={onSubmit}>
                 <div className="form-group">
-                    <input type="text" className="form-control" name = "name" id="name" value = {name} onChange = {onChange} placeholder="Enter your name" required/>
-                    <input type="email" className="form-control" name = "email" id="email" value = {email} onChange = {onChange} placeholder="Enter your email" required/>
-                    <input type="password" className="form-control" name = "password" id="password" value = {password} onChange = {onChange} placeholder="Enter your password" required />
-                    <input type="password" className="form-control" name = "confirmPassword" id="confirmPassword" value = {confirmPassword} onChange = {onChange} placeholder="Confirm your password" required />
+                    <input type="text" className="form-control" id='name' value={name}
+                        name='name' required onChange={onChange} placeholder='Enter your name'/>
                 </div>
+
+                <div className="form-group">
+                    <input type="email" className="form-control" id='email' value={email}
+                        name='email' required onChange={onChange} placeholder='Enter your email'/>
+                </div>
+
+                <div className="form-group">
+                    <input type="password" className="form-control" id='password' value={password}
+                        name='password' required onChange={onChange} placeholder='Enter your password'/>
+                </div>
+
+                <div className="form-group">
+                    <input type="password" className="form-control" id='password2' value={password2}
+                        name='password2' required onChange={onChange} placeholder='Confirm your password'/>
+                </div>
+
                 <div className="form-group">
                     <button className="btn btn-block">Submit</button>
                 </div>
             </form>
         </section>
-    </>
-  )
-}
-
+      </>
+    )
+  }
+  
 export default Register
+  
