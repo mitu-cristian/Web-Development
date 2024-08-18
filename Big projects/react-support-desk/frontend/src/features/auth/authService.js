@@ -1,28 +1,24 @@
-import axios from 'axios';
-
-const API_URL = '/api/users';
+import axios from "axios";
+const  API_URL = "/url/api/users";
 
 // Register user
 const register = async (userData) => {
-    const response = await axios.post(API_URL, userData)
-    if(response.data) {
-        localStorage.setItem('user', JSON.stringify(response.data))
+    const res = await axios.post(API_URL, userData);
+    if(res.data) {
+        localStorage.setItem("user", JSON.stringify(res.data));
+        return res.data;
     }
-    return response.data;
 }
 
-// Login user  
+// Login user
 const login = async (userData) => {
-    const response = await axios.post(API_URL + '/login', userData)
-    if(response.data) {
-        localStorage.setItem('user', JSON.stringify(response.data))
+    const res = await axios.post(API_URL + "/login", userData);
+    if(res.data) {
+        localStorage.setItem("user", JSON.stringify(res.data));
+        return res.data;
     }
-    return response.data;
 }
 
+const authService = {register, login};
 
-// Logout user
-const logout = () => localStorage.removeItem('user')
-
-const authService = {register, logout, login}
 export default authService;

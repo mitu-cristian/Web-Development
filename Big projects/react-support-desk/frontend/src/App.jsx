@@ -1,8 +1,12 @@
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Header from "./components/Header";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import HeaderComponent from "./components/HeaderComponent";
+import NewTicketPage from "./pages/NewTicketPage";
+import MyTicketsPage from "./pages/MyTicketsPage";
+import TicketPage from "./pages/TicketPage";
+import PrivateRouteComponent from "./components/PrivateRouteComponent";
 import {ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -12,15 +16,27 @@ function App() {
     <>
     <Router>
       <div className="container">
-        <Header/>
+        <HeaderComponent/>
         <Routes>
-          <Route path = "/" element = {<Home/>}/>
-          <Route path = "/login" element = {<Login/>}/>
-          <Route path = "/register" element = {<Register/>}/>
+          <Route path = "/" element = {<HomePage/>}/>
+          <Route path = "/login" element = {<LoginPage/>}/>
+          <Route path = "/register" element = {<RegisterPage/>}/>
+          <Route path = "/ticket/:ticketId" element = {<TicketPage/>}/>
+          
+          {/* Private routes */}
+          
+          <Route path = "/new-ticket" element = {<PrivateRouteComponent/>}>
+            <Route path = "/new-ticket" element = {<NewTicketPage/>}/>
+          </Route>
+
+          <Route path = "/my-tickets" element = {<PrivateRouteComponent/>}>
+            <Route path = "/my-tickets" element = {<MyTicketsPage/>}/>
+          </Route>
         </Routes>
       </div>
     </Router>
     <ToastContainer/>
+
     </>
   )
 }

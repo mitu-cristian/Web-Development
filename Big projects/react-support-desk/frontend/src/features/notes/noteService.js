@@ -1,16 +1,9 @@
-import axios from 'axios';
+import axios from "axios";
+const NOTE_URL = "/url/api/tickets/";
 
-const API_URL = '/api/tickets/'
-
-// Get ticket notes
-const getNotes = async(ticketId, token) => {
-    const config = {
-        headers: {
-            Authorization: `Bearere ${token}`
-        }
-    }
-    const response = await axios.get(API_URL + ticketId + '/notes', config)
-    return response.data 
+const getAllNotesForTicket = async (ticketId) => {
+    const response = await axios.get(NOTE_URL + ticketId + "/notes");
+    return response.data;
 }
 
 const createNote = async (noteText, ticketId, token) => {
@@ -18,12 +11,10 @@ const createNote = async (noteText, ticketId, token) => {
         headers: {
             Authorization: `Bearer ${token}`
         }
-    }
-    const response = await axios.post(API_URL + ticketId + '/notes', {
-        text: noteText
-    }, config)
+    };
+    const response = await axios.post(NOTE_URL + ticketId + "/notes", {text: noteText}, config);
     return response.data;
 }
 
-const noteService = {getNotes, createNote}
+const noteService = {getAllNotesForTicket, createNote};
 export default noteService;

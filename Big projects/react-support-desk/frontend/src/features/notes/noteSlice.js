@@ -1,79 +1,83 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import noteService from './noteService';
+import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
+import noteService from "./noteService";
 
 const initialState = {
     notes: [],
     isError: false,
     isSuccess: false,
     isLoading: false,
-    message: ''
-}
+    message: ""
+};
 
-// Get notes
-export const getNotes = createAsyncThunk ( 'notes/getAll',async (ticketId, thunkAPI) => {
+// Get all notes
+export const getAllNotesForTicket = createAsyncThunk("notes/getAllForTicket", async (ticketId, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.user.token;
-        return await noteService.getNotes(ticketId, token)
+        return await noteService.getAllNotesForTicket(ticketId);
     }
-    
     catch(error) {
-        const message = (error.message && error.response.data && error.response.data.message) ||
-            error.message || error.toString();
-        return thunkAPI.rejectWithValue(message)
+        const message = error?.response?.data?.message || error.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
     }
-})
+});
 
-// Create a ticket note
-export const createNote = createAsyncThunk ('notes/create', async({noteText, ticketId}, thunkAPI) => {
+// User adds a note
+export const createNote = createAsyncThunk ("notes/create", async({noteText, ticketId}, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token;
         return await noteService.createNote(noteText, ticketId, token);
     }
-
-    catch(error) {
-        const message = (error.response && error.response.data && error.response.data.message) ||
-            error.message || error.toString()
-        return thunkAPI.rejectWithValue(message)
+    catch (error) {
+        const message = error?.response?.data?.message || error.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
     }
 })
 
 export const noteSlice = createSlice({
-    name: 'note',
-    initialState,
+    name: "note",
+    initialState: initialState,
     reducers: {
-        reset: (state) => initialState
+        reset: (state) => {
+            state.notes = [];
+            state.isError = false;
+            state.isSuccess = false;
+            state.isLoading = false;
+            state.message = "";
+        }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getNotes.pending, (state) => {
-                state.isLoading = true
+        // Get all notes for a ticket
+            .addCase(getAllNotesForTicket.pending, (state) => {
+                state.isLoading = true;
             })
-            .addCase(getNotes.fulfilled, (state, action) => {
+           .addCase(getAllNotesForTicket.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+           }) 
+           .addCase(getAllNotesForTicket.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
                 state.notes = action.payload;
-            })
-            .addCase(getNotes.rejected, (state, action) => {
+           })
+        // Create a note
+           .addCase(createNote.pending, (state) => {
+                state.isLoading = true;
+           })
+           .addCase(createNote.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;
-            })
-
-            .addCase(createNote.pending, (state) => {
-                state.isLoading = true
-            })
-            .addCase(createNote.fulfilled, (state, action) => {
+           })
+           .addCase(createNote.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
                 state.notes.push(action.payload);
-            })
-            .addCase(createNote.rejected, (state, action) => {
-                state.isLoading = false;
-                state.isError = true;
-                state.message = action.payload;
-            })
+           })
     }
-})
+});
 
+export const selectNoteSlice = (state) => state.note;
 export const {reset} = noteSlice.actions;
 export default noteSlice.reducer;
+

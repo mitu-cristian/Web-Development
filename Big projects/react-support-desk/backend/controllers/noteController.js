@@ -9,21 +9,21 @@ const Note = require('../models/noteModel');
 // @access  Private
 const getNotes = asyncHandler( async (req, res) => {
 // Get user from JWT
-    const user = await User.findById(req.user.id)
+    // const user = await User.findById(req.user.id)
 
-    if(!user) {
-        res.status(401)
-        throw new Error('User not found')
-    }
+    // if(!user) {
+    //     res.status(401)
+    //     throw new Error('User not found')
+    // }
 
-    const ticket = await Ticket.findById(req.params.ticketId)
+    const ticket = await Ticket.findById(req.params.ticketId);
 
-    if(ticket.user.toString() !== req.user.id) {
-        res.status(401)
-        throw new Error('User not authorized.')
-    }
+    // if(ticket.user.toString() !== req.user.id) {
+    //     res.status(401)
+    //     throw new Error('User not authorized.')
+    // }
 
-    const notes = await Note.find({ticket: req.params.ticketId})
+    const notes = await Note.find({ticket: req.params.ticketId}).populate("user");
 
     res.status(200).json(notes)
 })
@@ -31,7 +31,7 @@ const getNotes = asyncHandler( async (req, res) => {
 // @desc Create a ticket note
 // @route POST /api/tickets/:ticketId/notes
 // @access Private
-const addNote = asyncHandler( async (req, res) => {
+const addUserNote = asyncHandler( async (req, res) => {
     const user = await User.findById(req.user.id)
 
     if(!user) {
@@ -41,10 +41,10 @@ const addNote = asyncHandler( async (req, res) => {
 
     const ticket = await Ticket.findById(req.params.ticketId)
 
-    if(ticket.user.toString() !== req.user.id) {
-        res.status(401)
-        throw new Error('User not authorised.')
-    }
+    // if(ticket.user.toString() !== req.user.id) {
+    //     res.status(401)
+    //     throw new Error('User not authorised.')
+    // }
 
     const note = await Note.create({
         text: req.body.text,
@@ -55,4 +55,4 @@ const addNote = asyncHandler( async (req, res) => {
 
     res.status(200).json(note)
 })
-module.exports = {getNotes, addNote}
+module.exports = {getNotes, addUserNote}

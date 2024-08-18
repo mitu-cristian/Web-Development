@@ -1,20 +1,21 @@
-import {useState, useEffect} from 'react';
-import {useSelector} from 'react-redux';
+import {useState, useEffect} from "react";
+import {useSelector} from "react-redux";
+import {selectAuthSlice} from "../features/auth/authSlice";
 
-export const useAuthStatus = ( ) =>{
+export const useAuthStatus = () => {
     const [loggedIn, setLoggedIn] = useState(false);
-    const [ceckingStatus, setCeckingStatus] = useState(true);
+    const [checkingStatus, setCheckingStatus] = useState(true);
 
-    const {user} = useSelector((state) => state.auth)
-
+    const {user} = useSelector(selectAuthSlice);
     useEffect(() => {
-        if(user)
+        if(user) {
             setLoggedIn(true);
-        else
+        }
+        else {
             setLoggedIn(false);
-        setCeckingStatus(false)
-        
+        }
+        setCheckingStatus(false);
     }, [user])
 
-    return {loggedIn, ceckingStatus}
+    return {loggedIn, checkingStatus};
 }

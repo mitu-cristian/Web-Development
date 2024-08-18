@@ -1,12 +1,28 @@
 const asyncHandler = require('express-async-handler')
-const db = require('../config/db')
 const User = require('../models/userModel')
 const Ticket = require('../models/ticketModel')
 
+// @desc    Get all tickets
+// @route   GET     /api/tickets
+// @access  Public
+const getAllTickets = asyncHandler(async (req, res) => {
+    const tickets = await Ticket.find().populate("user");
+    res.status(200).json(tickets);
+})
+
+// @desc    Retrieve the most recent 3 tickets
+// @route   GET     /api/tickets/summary
+// @access  Public
+const getTicketsSummary = asyncHandler(async (req, res) => {
+    const recentNewTickets = await Ticket.find({status: "new"}).sort({updatedAt: -1}).limit(3).populate("user");
+    const recentClosedTickets = await Ticket.find({status: "closed"}).sort({updatedAt: -1}).limit(3).populate("user");
+    res.status(200).json({recentNewTickets, recentClosedTickets});
+})
+
 // @desc    Get user tickets
-// @route   GET    /api/tickets
+// @route   GET    /api/tickets/user
 // @access  Private
-const getTickets = asyncHandler(async (req, res) => {
+const getUserTickets = asyncHandler(async (req, res) => {
 // We have acces to req.user from the auth middleware
 
 // Get user using the id in JWT
@@ -25,23 +41,24 @@ const getTickets = asyncHandler(async (req, res) => {
 // @access  Private
 const getTicket = asyncHandler(async (req, res) => {
 // Get user using the id in the JWT
-    const user = await User.findById(req.user.id)
 
-    if(!user) {
-        res.status(401);
-        throw new Error('User not found.')
-    }
+    // const user = await User.findById(req.user.id)
 
-    const ticket = await Ticket.findById(req.params.id)
+    // if(!user) {
+    //     res.status(401);
+    //     throw new Error('User not found.')
+    // }
+
+    const ticket = await Ticket.findById(req.params.id).populate("user");
     if(!ticket) {
         res.status(404);
         throw new Error("Ticket not found");
     }
 
-    if(ticket.user.toString() !== req.user.id) {
-        res.status(401);
-        throw new Error('Not Authorised');
-    }
+    // if(ticket.user.toString() !== req.user.id) {
+    //     res.status(401);
+    //     throw new Error('Not Authorised');
+    // }
 
     res.status(200).json(ticket)
 })
@@ -125,4 +142,5 @@ const updateTicket = asyncHandler(async (req, res) => {
     res.status(200).json(updatedTicket)
 })
 
-module.exports = {getTickets, createTicket, getTicket, deleteTicket, updateTicket}
+module.exports = {getAllTickets, getUserTickets, createTicket, getTicket, deleteTicket, updateTicket,
+    getTicketsSummary};
