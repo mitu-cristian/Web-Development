@@ -10,21 +10,22 @@ import SpinnerComponent from "../components/SpinnerComponent";
 import NoteComponent from "../components/NoteComponent";
 import Modal from "react-modal";
 import {FaPlus} from "react-icons/fa";
+import ModalComponent from "../components/ModalComponent";
 
-const customStyles = {
-  content: {
-    width: "600px",
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-    position: "relative"
-  }
-}
+// const customStyles = {
+//   content: {
+//     width: "600px",
+//     top: "50%",
+//     left: "50%",
+//     right: "auto",
+//     bottom: "auto",
+//     marginRight: "-50%",
+//     transform: "translate(-50%, -50%)",
+//     position: "relative"
+//   }
+// }
 
-Modal.setAppElement("#root");
+// Modal.setAppElement("#root");
 
 const TicketPage = () => {
 
@@ -35,13 +36,14 @@ const TicketPage = () => {
   const {ticketId} = useParams();
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [noteText, setNoteText] = useState("");
+  // const [noteText, setNoteText] = useState("");
 
-  const onNoteSubmit = (event) => {
-    event.preventDefault();
-    dispatch(createNote({noteText, ticketId}));
-    setModalIsOpen(false);
-  }
+  // const onNoteSubmit = (event) => {
+  //   event.preventDefault();
+  //   dispatch(createNote({noteText, ticketId}));
+  //   setModalIsOpen(false);
+  //   setNoteText("");
+  // }
 
   const onTicketClosed = () => {
     dispatch(closeTicket(ticketId));
@@ -68,8 +70,21 @@ const TicketPage = () => {
   }, [ticketIsError, ticketIsSuccess, ticketMessage, noteIsError, 
     noteIsSuccess, noteMessage, dispatch]);
 
+  // useEffect(() => {
+  //   if(ticketIsError)
+  //     toast.error(ticketMessage);
+  //   if(ticketIsSuccess) {
+  //     return () => {
+  //       dispatch(ticketReset());
+  //     }
+  //   }
+  // }, [ticketIsError, ticketMessage, ticketIsSuccess, dispatch])
+
   if(ticketIsLoading || noteIsLoading) 
     return <SpinnerComponent/>
+
+  // if(ticketIsLoading) 
+  //   return <SpinnerComponent/>
 
   return (
     <div className="ticket-page">
@@ -96,7 +111,7 @@ const TicketPage = () => {
         <button className="btn" onClick = { () => setModalIsOpen(true)}> <FaPlus/> Add note</button>
       )}
 
-      <Modal isOpen = {modalIsOpen} onRequestClose = {() => setModalIsOpen(false)} style = {customStyles}
+      {/* <Modal isOpen = {modalIsOpen} onRequestClose = {() => setModalIsOpen(false)} style = {customStyles}
       contentLabel = "Add note">
           <h2>Add note</h2>
           <button className="btn-close" onClick = {() => setModalIsOpen(false)}>X</button>
@@ -109,7 +124,9 @@ const TicketPage = () => {
               <button className="btn" type="submit">Submit</button>
             </div>
           </form>
-      </Modal>
+      </Modal> */}
+
+      <ModalComponent ticketId = {ticketId} modalIsOpen = {modalIsOpen} setModalIsOpen = {setModalIsOpen}/>
 
       {notes.map((note) => (<NoteComponent key = {note._id} note = {note}/>))}
 
@@ -120,4 +137,4 @@ const TicketPage = () => {
   )
 }
 
-export default TicketPage
+export default TicketPage;

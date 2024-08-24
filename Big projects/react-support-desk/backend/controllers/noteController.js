@@ -46,12 +46,14 @@ const addUserNote = asyncHandler( async (req, res) => {
     //     throw new Error('User not authorised.')
     // }
 
-    const note = await Note.create({
+    let note = await Note.create({
         text: req.body.text,
         isStaff: false,
         ticket: req.params.ticketId,
         user: req.user.id
-    })
+    });
+
+    note = await note.populate("user");
 
     res.status(200).json(note)
 })
