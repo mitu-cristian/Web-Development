@@ -19,7 +19,9 @@
     "express": "^4.18.2",
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^9.0.0",
-    "mongoose": "^7.0.2"
+    "mongoose": "^7.0.2",
+    "nodemailer": "^6.9.14",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.21"

@@ -2,6 +2,29 @@ const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
+const UserVerification = require("../models/userVerificationModel");
+const nodemailer = require("nodemailer");
+const {v4: uuidv4} = require("uuid");
+require("dotenv").config();
+
+let transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.AUTH_EMAIL,
+        pass: process.env.AUTH_PASS
+    }
+});
+
+// Testing the transporter
+transporter.verify((error, success) => {
+    if(error) {
+        console.log(error);
+    }
+    else {
+        console.log("Ready for sending email messages");
+        console.log(success);
+    }
+});
 
 // @desc    Register a new user
 // @route   /api/users
@@ -16,33 +39,119 @@ const registerUser = asyncHandler( async (req, res) => {
     }
 
 // Find if user already exists
-    const userExists = await User.findOne({email})
-    if(userExists) {
+    const checkUser = await User.findOne({email})
+    if(checkUser && checkUser.verified == true) {
         res.status(400)
-        throw new Error('User already exists.')
+        throw new Error('User already exists. Please log in.')
     }
 
-// Hash the password
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(password, salt)
+    else if (checkUser && checkUser.verified == false) {
+        const checkUserVerification = await UserVerification.findOne({user: checkUser._id}).populate("user");
 
-// Create user
-    const user = await User.create({
-        name, email, password: hashedPassword
-    })
+        // If the link is active (has less than 6 hours)
+        if(checkUserVerification.expiredAt > Date.now()) {
+            res.status(401);
+            throw new Error(`Check the ${checkUser.email} inbox. Look for an email received from ${process.env.AUTH_EMAIL}.`);
+        }
 
-    if(user) {
-        res.status(201).json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            token: generateToken(user._id)
-        })
+        // If the link is inactive (has more than 6 hours)
+        if(checkUserVerification.expiredAt < Date.now()) {
+            // delete the user verification data
+            await UserVerification.findOneAndDelete({_id: checkUserVerification._id});
+            sendVerificationEmail(checkUser, res);
+        }
     }
 
+    // If is indeed a new user
+    else if(!checkUser) {
+        // Hash the password
+            const salt = await bcrypt.genSalt(10)
+            const hashedPassword = await bcrypt.hash(password, salt)
+        
+        // Create user
+            const user = await User.create({
+                name, email, password: hashedPassword
+            })
+        
+            if(user)
+                sendVerificationEmail(user, res);
+            else {
+                res.status(500);
+                throw new Error('Database error.');
+            }
+    }
+
+});
+
+const sendVerificationEmail = asyncHandler (async ({_id, email}, res) => {
+    // url to be used in the email
+    const currentUrl = "http://localhost:8000";
+    const uniqueString = uuidv4() + _id;
+    // mail options
+    const mailOptions = {
+        from: process.env.AUTH_EMAIL,
+        to: email,
+        subject: "Verify your email",
+        html: `<p>Verify your email to complete the registration.</p>
+        <p>This link expires in 6 hours.</p>
+        <p>Press <a href='${currentUrl + "/api/users/verify/" + _id + "/" + uniqueString}'>here</a> to activate your account.</p>
+        `
+    };
+
+    // hash the uniqueString
+    const salt = await bcrypt.genSalt(10);
+    const hashedUniqueString = await bcrypt.hash(uniqueString, salt);
+    const newUserVerification = await UserVerification.create({
+        user: _id,
+        uniqueString: hashedUniqueString,
+        createdAt: Date.now(),
+        expiredAt: Date.now() + 21600000
+    });
+
+    if(newUserVerification) {
+        const sentMail = await transporter.sendMail(mailOptions);
+        if(sentMail) {
+            res.status(200);
+            res.json({
+                message: `Check ${email} to activate your account.`
+            });
+        }
+    }
+})
+
+const verifyEmailLink = asyncHandler (async (req, res) => {
+    let {userId, uniqueString} = req.params;
+    const checkUserVerification = await UserVerification.findOne({user: userId});
+    if(!checkUserVerification) {
+        res.status(401);
+        throw new Error("This verification link doesn't exist.");
+    }
     else {
-        res.status(400);
-        throw new Error('Invalid user data');
+        const checkUser = await User.findById(userId);
+        if(!checkUser) {
+            res.status(401);
+            throw new Error("This account doesn't exist.");
+        }
+        if(checkUser.verified == true) {
+            res.status(401);
+            throw new Error("This account is already verified. Please log in.")
+        }
+        // the link has expired (has more than 6 hours)
+        if(checkUserVerification.expiredAt < Date.now()) {
+            await UserVerification.deleteOne({user: userId});
+            await User.deleteOne({_id: userId});
+            res.status(401);
+            throw new Error("Verification link is expired. Please register again.");
+        }
+        if (await bcrypt.compare(uniqueString, checkUserVerification.uniqueString)) {
+            // right branch
+            const updatedUser = await User.updateOne({_id: userId}, {verified: true});
+            await UserVerification.deleteOne({user: userId});
+            if(updatedUser)
+                res.status(200).json({
+                    message: "The account was successfully verified. Please log in"
+                });
+        }
     }
 })
 
@@ -50,20 +159,30 @@ const registerUser = asyncHandler( async (req, res) => {
 // @route   /api/users/login
 // @access  Public
 const loginUser = asyncHandler ( async (req, res) => {
-    const {email, password} = req.body
-    const user = await User.findOne({email})
+    const {email, password} = req.body;
+    const checkUser = await User.findOne({email});
 
-// Check user and password match
-    if(user && (await bcrypt.compare(password, user.password))) {
-        res.status(200).json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            token: generateToken(user._id)
-        })
-    } else {
+    if(!checkUser) {
         res.status(401);
-        throw new Error('Invalid credentials.')
+        throw new Error("This account doesn't exist. Please register.")
+    }
+    if(checkUser.verified == false) {
+        res.status(401);
+        throw new Error(`Account not verified. Please check the ${email} for an email sent by ${process.env.AUTH_EMAIL}`);
+    }
+// Check user and password match
+    const checkPasswordsMatch = await bcrypt.compare(password, checkUser.password);
+    if(checkPasswordsMatch == false) {
+        res.status(401);
+        throw new Error("Invalid credentials.");
+    }
+    if(checkPasswordsMatch == true) {
+            res.status(200).json({
+            _id: checkUser._id,
+            name: checkUser.name,
+            email: checkUser.email,
+            token: generateToken(checkUser._id)
+        });
     }
 })
 
@@ -87,5 +206,5 @@ const getMe = asyncHandler ( async(req, res) => {
 })
 
 module.exports = {
-    registerUser, loginUser, getMe
+    registerUser, loginUser, getMe, verifyEmailLink
 }
