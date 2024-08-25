@@ -329,6 +329,7 @@ footer {
 
   .form {
     width: 90%;
+    max-width: 90%;
   }
 
   .ticket-created h2,

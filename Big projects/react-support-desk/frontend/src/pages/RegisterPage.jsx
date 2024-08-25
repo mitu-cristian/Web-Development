@@ -1,9 +1,8 @@
 import {useState, useEffect} from "react";
-import {useNavigate} from "react-router-dom";
 import {FaUser} from "react-icons/fa";
 import {toast} from "react-toastify";
 import {useSelector, useDispatch} from "react-redux";
-import {register, reset} from "../features/auth/authSlice";
+import {register, reset as authReset} from "../features/auth/authSlice";
 import {selectAuthSlice} from "../features/auth/authSlice";
 import SpinnerComponent from "../components/SpinnerComponent";
 
@@ -19,19 +18,18 @@ const RegisterPage = () => {
     const {name, email, password, confirmPassword} = formData;
 
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const {user, isLoading, isError, isSuccess, message} = useSelector(selectAuthSlice);
+    const {isLoading: authIsLoading, isError: authIsError, isSuccess: authIsSuccess, message: authMessage} = useSelector(selectAuthSlice);
 
     useEffect(() => {
-        if(isError) {
-            toast.error(message);
+        if(authIsError) {
+            toast.error(authMessage);
         }
-        if(isSuccess || user) {
-            navigate("/");
+        if(authIsSuccess) {
+            return () => {
+                dispatch(authReset());
+            }
         }
-
-        dispatch(reset());
-    }, [isError, isSuccess, user, message, navigate]);
+    }, [authIsError, authIsSuccess, authMessage, dispatch]);
 
     const onChange = (event) => {
         setFormData((prevState) => ({
@@ -52,7 +50,9 @@ const RegisterPage = () => {
         
     }
 
-    if(isLoading) {
+    console.log(authMessage);
+
+    if(authIsLoading) {
         return <SpinnerComponent/>
     }
 
@@ -78,6 +78,8 @@ const RegisterPage = () => {
                 </div>
             </form>
         </section>
+
+        {(authIsSuccess && authMessage) ? <p>{authMessage.message}</p> : ""}
     </>
   )
 }

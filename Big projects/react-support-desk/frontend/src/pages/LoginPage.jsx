@@ -6,6 +6,8 @@ import {login, reset} from "../features/auth/authSlice";
 import {selectAuthSlice} from "../features/auth/authSlice";
 import {useNavigate} from "react-router-dom";
 import SpinnerComponent from "../components/SpinnerComponent";
+// IBM Carbon Components
+import {Button} from "@carbon/react";
 
 const LoginPage = () => {
 
@@ -63,10 +65,12 @@ const LoginPage = () => {
                     <input type="password" className="form-control" name = "password" id="password" value = {password} onChange = {onChange} placeholder="Enter your password" required />
                 </div>
                 <div className="form-group">
-                    <button className="btn btn-block">Submit</button>
+                    {/* <button className="btn btn-block">Submit</button> */}
+                    <Button size = "xl" className="button">Log in</Button>
                 </div>
             </form>
         </section>
+        
         </>
   )
 }

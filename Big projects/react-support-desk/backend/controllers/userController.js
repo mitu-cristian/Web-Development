@@ -29,61 +29,74 @@ transporter.verify((error, success) => {
 // @desc    Register a new user
 // @route   /api/users
 // @access  Public
-const registerUser = asyncHandler( async (req, res) => {
-    const {name, email, password} = req.body
+const registerUser = asyncHandler(async (req, res) => {
+    const {name, email, password} = req.body;
 
-// Validation
+    // Validation
     if(!name || !email || !password) {
         res.status(400);
-        throw new Error('Please include all fields')
+        throw new Error("Please include all fields.")
     }
 
-// Find if user already exists
-    const checkUser = await User.findOne({email})
-    if(checkUser && checkUser.verified == true) {
-        res.status(400)
-        throw new Error('User already exists. Please log in.')
-    }
+    const checkUser = await User.findOne({email});
 
-    else if (checkUser && checkUser.verified == false) {
-        const checkUserVerification = await UserVerification.findOne({user: checkUser._id}).populate("user");
 
-        // If the link is active (has less than 6 hours)
-        if(checkUserVerification.expiredAt > Date.now()) {
-            res.status(401);
-            throw new Error(`Check the ${checkUser.email} inbox. Look for an email received from ${process.env.AUTH_EMAIL}.`);
+    // checkUser: YES
+    if(checkUser) {
+        // User is successfully registered
+        if(checkUser.verified == true) {
+            res.status(400);
+            throw new Error("This account already exists. Please log in.");
         }
 
-        // If the link is inactive (has more than 6 hours)
-        if(checkUserVerification.expiredAt < Date.now()) {
-            // delete the user verification data
-            await UserVerification.findOneAndDelete({_id: checkUserVerification._id});
-            sendVerificationEmail(checkUser, res);
-        }
-    }
-
-    // If is indeed a new user
-    else if(!checkUser) {
-        // Hash the password
-            const salt = await bcrypt.genSalt(10)
-            const hashedPassword = await bcrypt.hash(password, salt)
+        const checkUserVerification = await UserVerification.findOne({user: checkUser._id});
         
-        // Create user
-            const user = await User.create({
-                name, email, password: hashedPassword
-            })
-        
-            if(user)
-                sendVerificationEmail(user, res);
-            else {
-                res.status(500);
-                throw new Error('Database error.');
+        if(checkUser.verified == false) {
+    
+            // checkUser: YES   checkUserVerification: NO
+            if(!checkUserVerification) {
+                await User.findOneAndDelete({_id: checkUser._id});
+                res.status(401);
+                throw new Error("Please register again.")
             }
+    
+            // If the link is active (has less than 6 hours)
+            if(checkUserVerification.expiredAt > Date.now()) {
+                res.status(401);
+                throw new Error(`Check the ${checkUser.email} inbox. Look for an email received from ${process.env.AUTH_EMAIL}.`);
+            }
+    
+            // If the link is inactive (has more than 6 hours)
+            if(checkUserVerification.expiredAt < Date.now()) {
+                // delete the user verification data
+                await UserVerification.findOneAndDelete({_id: checkUserVerification._id});
+                
+                // send again the verification email
+                sendVerificationEmail(checkUser, res);
+            }
+    
+        }
+
+    }
+
+    // checkUser: NO
+    else if(!checkUser){
+        // Hash the password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+    
+        // Create user
+        const user = await User.create({
+            name: name, 
+            email: email, 
+            password: hashedPassword
+        });
+        sendVerificationEmail(user, res);       
     }
 
 });
 
-const sendVerificationEmail = asyncHandler (async ({_id, email}, res) => {
+const sendVerificationEmailOld = asyncHandler (async ({_id, email}, res) => {
     // url to be used in the email
     const currentUrl = "http://localhost:8000";
     const uniqueString = uuidv4() + _id;
@@ -117,43 +130,86 @@ const sendVerificationEmail = asyncHandler (async ({_id, email}, res) => {
             });
         }
     }
-})
+});
 
-const verifyEmailLink = asyncHandler (async (req, res) => {
+const sendVerificationEmail = asyncHandler (async ({_id, email}, res) => {
+    // url to be used in the email
+    const currentUrl = "http://localhost:3000";
+    const uniqueString = uuidv4() + _id;
+    // mail options
+    const mailOptions = {
+        from: process.env.AUTH_EMAIL,
+        to: email,
+        subject: "Verify your email",
+        html: `<p>Verify your email to complete the registration.</p>
+        <p>This link expires in 6 hours.</p>
+        <p>Press <a href='${currentUrl + "/verify/" + _id + "/" + uniqueString}'>here</a> to activate your account.</p>
+        `
+    };
+
+    // hash the uniqueString
+    const salt = await bcrypt.genSalt(10);
+    const hashedUniqueString = await bcrypt.hash(uniqueString, salt);
+    const newUserVerification = await UserVerification.create({
+        user: _id,
+        uniqueString: hashedUniqueString,
+        createdAt: Date.now(),
+        expiredAt: Date.now() + 21600000
+    });
+
+    if(newUserVerification) {
+        const sentMail = await transporter.sendMail(mailOptions);
+        if(sentMail) {
+            res.status(200);
+            res.json({
+                message: `Check ${email} to activate your account.`
+            });
+        }
+    }
+});
+
+const verifyEmailLink = asyncHandler( async (req, res) => {
     let {userId, uniqueString} = req.params;
     const checkUserVerification = await UserVerification.findOne({user: userId});
+
+    // checkUserVerification: NO
     if(!checkUserVerification) {
+        const message = "This verification link doesn't exist.";
+        // res.redirect(`/user/verified?error=true&messsage=${message}`)
         res.status(401);
-        throw new Error("This verification link doesn't exist.");
+        throw new Error("This verification link doesn't exist.")
     }
+
+    // checkUserVerification: YES
     else {
         const checkUser = await User.findById(userId);
+        
+        // checkUser: NO    checkUserVerification: YES
         if(!checkUser) {
+            await checkUserVerification.deleteOne();
             res.status(401);
-            throw new Error("This account doesn't exist.");
+            throw new Error("An error occurred. Please register again.");
         }
         if(checkUser.verified == true) {
             res.status(401);
-            throw new Error("This account is already verified. Please log in.")
+            throw new Error("This account was already verified. Please log in.");
         }
-        // the link has expired (has more than 6 hours)
         if(checkUserVerification.expiredAt < Date.now()) {
-            await UserVerification.deleteOne({user: userId});
+            await checkUserVerification.deleteOne();
             await User.deleteOne({_id: userId});
             res.status(401);
             throw new Error("Verification link is expired. Please register again.");
         }
-        if (await bcrypt.compare(uniqueString, checkUserVerification.uniqueString)) {
+        if(await bcrypt.compare(uniqueString, checkUserVerification.uniqueString)) {
             // right branch
-            const updatedUser = await User.updateOne({_id: userId}, {verified: true});
-            await UserVerification.deleteOne({user: userId});
-            if(updatedUser)
-                res.status(200).json({
-                    message: "The account was successfully verified. Please log in"
-                });
+            await User.updateOne({_id: userId}, {verified: true});
+            await checkUserVerification.deleteOne();
+            res.status(200).json({
+                message: "This account is successfully verified. Please log in."
+            });
         }
     }
-})
+});
 
 // @desc    Login a user
 // @route   /api/users/login
