@@ -12,6 +12,8 @@ import Modal from "react-modal";
 import {FaPlus} from "react-icons/fa";
 import ModalComponent from "../components/ModalComponent";
 
+import {Tag, Button} from "@carbon/react";
+
 // const customStyles = {
 //   content: {
 //     width: "600px",
@@ -90,7 +92,7 @@ const TicketPage = () => {
     <div className="ticket-page">
       <header className="ticket-header">
         <h2>Ticket ID: {ticket._id}
-          <span className={`status status-${ticket.status}`}> {ticket.status} </span>
+          <Tag type={ticket.status == "new" ? "green" : "red"}> {ticket.status} </Tag>
         </h2>
         <header className="ticket-header">
           <h2>Name: {ticket?.user?.name && ticket.user.name}</h2>
@@ -108,7 +110,7 @@ const TicketPage = () => {
       </header>
 
       {(ticket.status !== "closed" && user) && (
-        <button className="btn" onClick = { () => setModalIsOpen(true)}> <FaPlus/> Add note</button>
+        <Button kind="secondary" onClick = { () => setModalIsOpen(true)} style={{margin: "20px"}}> Add note</Button>
       )}
 
       {/* <Modal isOpen = {modalIsOpen} onRequestClose = {() => setModalIsOpen(false)} style = {customStyles}
@@ -131,7 +133,7 @@ const TicketPage = () => {
       {notes.map((note) => (<NoteComponent key = {note._id} note = {note}/>))}
 
       {(ticket.status !== "closed" && user?._id === ticket?.user?._id) && (
-        <button className="btn btn-block btn-danger" onClick = {onTicketClosed} style={{width: "fit-content", margin: "0 auto"}}>Close ticket</button>
+        <Button kind="danger" onClick = {onTicketClosed} style={{margin: "20px"}}>Close ticket</Button>
       )}
     </div>
   )

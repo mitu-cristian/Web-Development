@@ -7,7 +7,8 @@ import {selectAuthSlice} from "../features/auth/authSlice";
 import {useNavigate} from "react-router-dom";
 import SpinnerComponent from "../components/SpinnerComponent";
 // IBM Carbon Components
-import {Button} from "@carbon/react";
+import {Button, TextInput} from "@carbon/react";
+import {ButtonSkeleton, SkeletonText} from "@carbon/react";
 
 const LoginPage = () => {
 
@@ -30,7 +31,7 @@ const LoginPage = () => {
     const {user, isLoading, isSuccess, isError, message} = useSelector(selectAuthSlice);
 
     useEffect(() => {
-        if(user || isSuccess) {
+        if(user && isSuccess) {
             navigate("/");
         }
         else if (isError) {
@@ -46,7 +47,32 @@ const LoginPage = () => {
     }
 
     if(isLoading) {
-        return <SpinnerComponent/>
+        return (
+            <>
+            <section className="heading">
+                <h1>
+                    <FaSignInAlt/> Login
+                </h1>
+                <p>Please login to your account</p>
+            </section>
+    
+            <section className="form">
+                <form> 
+                    <div className="form-group">
+                        <SkeletonText width="80%" heading="true" style={{margin: "0 auto", textAlign: "left"}}/>
+                        <SkeletonText width="80%" heading="true" style={{margin: "0 auto", textAlign: "left"}}/>
+
+                        <div style={{margin: "20px"}}/>
+
+                        <SkeletonText width="80%" heading="true" style={{margin: "0 auto", textAlign: "left"}}/>
+                        <SkeletonText width="80%" heading="true" style={{margin: "0 auto", textAlign: "left"}}/>
+                    </div>
+                        <ButtonSkeleton style={{margin: "20px"}}/>
+                </form>
+            </section>
+            
+            </>
+        )
     }
 
   return (
@@ -61,13 +87,10 @@ const LoginPage = () => {
         <section className="form">
             <form onSubmit = {onSubmit}> 
                 <div className="form-group">
-                    <input type="email" className="form-control" name = "email" id="email" value = {email} onChange = {onChange} placeholder="Enter your email" required/>
-                    <input type="password" className="form-control" name = "password" id="password" value = {password} onChange = {onChange} placeholder="Enter your password" required />
+                    <TextInput type="email" id="email" name="email" labelText="Enter your email" value = {email} onChange = {onChange} required/>
+                    <TextInput type="password" id="password" name="password" labelText="Enter your password" value={password} onChange={onChange} required/>
                 </div>
-                <div className="form-group">
-                    {/* <button className="btn btn-block">Submit</button> */}
-                    <Button size = "xl" className="button">Log in</Button>
-                </div>
+                    <Button kind="secondary" type="submit">Log in</Button>
             </form>
         </section>
         

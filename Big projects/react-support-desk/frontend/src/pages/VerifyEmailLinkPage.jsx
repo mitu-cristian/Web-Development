@@ -5,6 +5,7 @@ import {useEffect} from "react";
 import {toast} from "react-toastify";
 // components
 import SpinnerComponent from "../components/SpinnerComponent";
+import {Button} from "@carbon/react";
 
 const VerifyEmailLinkPage = () => {
     const {isLoading: authIsLoading, isError: authIsError, isSuccess: authIsSuccess, message: authMessage} = useSelector(selectAuthSlice);
@@ -30,11 +31,11 @@ const VerifyEmailLinkPage = () => {
 
     return (
         <>
-        <button onClick = {verifyEmailLinkFunction}>Activate your account</button>
-        {(authIsSuccess && authMessage) ? 
+        {(authIsError && authMessage) ? <p> {authMessage} </p> : ""}
+        {(authIsSuccess == false && authIsError == false) && <Button onClick = {verifyEmailLinkFunction}>Activate your account</Button>}
+        {(authIsSuccess && authMessage) && 
             <><p>{authMessage.message}</p> 
-            <Link to = "/login">Log in</Link></>
-            : ""}
+            <Link to = "/login"> <Button>Log in</Button> </Link></>}
         </>
     )
 };

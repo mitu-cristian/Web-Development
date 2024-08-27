@@ -5,6 +5,9 @@ import {useSelector, useDispatch} from "react-redux";
 import {register, reset as authReset} from "../features/auth/authSlice";
 import {selectAuthSlice} from "../features/auth/authSlice";
 import SpinnerComponent from "../components/SpinnerComponent";
+// IBM carbon components
+import {Button, TextInput} from "@carbon/react";
+import {ButtonSkeleton, SkeletonText} from "@carbon/react";
 
 const RegisterPage = () => {
 
@@ -50,10 +53,43 @@ const RegisterPage = () => {
         
     }
 
-    console.log(authMessage);
-
     if(authIsLoading) {
-        return <SpinnerComponent/>
+        return (
+            <>
+            <section className="heading">
+                <h1>
+                    <FaUser/> Register
+                </h1>
+                <p>Please create an account</p>
+            </section>
+    
+            <section className="form">
+                <form onSubmit = {onSubmit}> 
+                    <div className="form-group">
+                    <SkeletonText width="80%" heading="true" style={{margin: "0 auto", textAlign: "left"}}/>
+                    <SkeletonText width="80%" heading="true" style={{margin: "0 auto", textAlign: "left"}}/>
+
+                    <div style={{margin: "20px"}}/>
+
+                    <SkeletonText width="80%" heading="true" style={{margin: "0 auto", textAlign: "left"}}/>
+                    <SkeletonText width="80%" heading="true" style={{margin: "0 auto", textAlign: "left"}}/>
+
+                    <div style={{margin: "20px"}}/>
+
+                    <SkeletonText width="80%" heading="true" style={{margin: "0 auto", textAlign: "left"}}/>
+                    <SkeletonText width="80%" heading="true" style={{margin: "0 auto", textAlign: "left"}}/>
+
+                    <div style={{margin: "20px"}}/>
+
+                    <SkeletonText width="80%" heading="true" style={{margin: "0 auto", textAlign: "left"}}/>
+                    <SkeletonText width="80%" heading="true" style={{margin: "0 auto", textAlign: "left"}}/>
+                    </div>
+    
+                    <ButtonSkeleton/>
+                </form>
+            </section>
+            </>
+        )
     }
 
   return (
@@ -68,18 +104,17 @@ const RegisterPage = () => {
         <section className="form">
             <form onSubmit = {onSubmit}> 
                 <div className="form-group">
-                    <input type="text" className="form-control" name = "name" id="name" value = {name} onChange = {onChange} placeholder="Enter your name" required/>
-                    <input type="email" className="form-control" name = "email" id="email" value = {email} onChange = {onChange} placeholder="Enter your email" required/>
-                    <input type="password" className="form-control" name = "password" id="password" value = {password} onChange = {onChange} placeholder="Enter your password" required />
-                    <input type="password" className="form-control" name = "confirmPassword" id="confirmPassword" value = {confirmPassword} onChange = {onChange} placeholder="Confirm your password" required />
+                    <TextInput type="text" id="name" name="name" labelText="Enter your name" value={name} onChange={onChange} required/>
+                    <TextInput type="email" id="email" name="email" labelText="Enter your email" value={email} onChange={onChange} required/>
+                    <TextInput type="password" id="password" name="password" labelText="Enter your password" value={password} onChange={onChange} required/>
+                    <TextInput type="password" id="confirmPassword" name="confirmPassword" labelText="Confirm your password" value={confirmPassword} onChange={onChange} required/>
                 </div>
-                <div className="form-group">
-                    <button className="btn btn-block">Submit</button>
-                </div>
+
+                <Button kind = "secondary" type = "submit" disabled = {authIsSuccess == true ? true : false} >Register</Button>
             </form>
         </section>
 
-        {(authIsSuccess && authMessage) ? <p>{authMessage.message}</p> : ""}
+        {(authIsSuccess && authMessage) ? <p style={{marginTop: "20px"}}>{authMessage.message}</p> : ""}
     </>
   )
 }

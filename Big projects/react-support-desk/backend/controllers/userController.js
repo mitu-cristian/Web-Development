@@ -96,42 +96,6 @@ const registerUser = asyncHandler(async (req, res) => {
 
 });
 
-const sendVerificationEmailOld = asyncHandler (async ({_id, email}, res) => {
-    // url to be used in the email
-    const currentUrl = "http://localhost:8000";
-    const uniqueString = uuidv4() + _id;
-    // mail options
-    const mailOptions = {
-        from: process.env.AUTH_EMAIL,
-        to: email,
-        subject: "Verify your email",
-        html: `<p>Verify your email to complete the registration.</p>
-        <p>This link expires in 6 hours.</p>
-        <p>Press <a href='${currentUrl + "/api/users/verify/" + _id + "/" + uniqueString}'>here</a> to activate your account.</p>
-        `
-    };
-
-    // hash the uniqueString
-    const salt = await bcrypt.genSalt(10);
-    const hashedUniqueString = await bcrypt.hash(uniqueString, salt);
-    const newUserVerification = await UserVerification.create({
-        user: _id,
-        uniqueString: hashedUniqueString,
-        createdAt: Date.now(),
-        expiredAt: Date.now() + 21600000
-    });
-
-    if(newUserVerification) {
-        const sentMail = await transporter.sendMail(mailOptions);
-        if(sentMail) {
-            res.status(200);
-            res.json({
-                message: `Check ${email} to activate your account.`
-            });
-        }
-    }
-});
-
 const sendVerificationEmail = asyncHandler (async ({_id, email}, res) => {
     // url to be used in the email
     const currentUrl = "http://localhost:3000";
@@ -171,28 +135,36 @@ const sendVerificationEmail = asyncHandler (async ({_id, email}, res) => {
 const verifyEmailLink = asyncHandler( async (req, res) => {
     let {userId, uniqueString} = req.params;
     const checkUserVerification = await UserVerification.findOne({user: userId});
+    const checkUser = await User.findById(userId);
+
+    if(!checkUser) {
+        await checkUserVerification.deleteOne();
+        res.status(500);
+        throw new Error("An error occurred. Please register again.")
+    }
+
+    if(checkUser.verified == true) {
+        res.status(401);
+        throw new Error("This account was already verified. Please log in.");
+    }
 
     // checkUserVerification: NO
     if(!checkUserVerification) {
-        const message = "This verification link doesn't exist.";
-        // res.redirect(`/user/verified?error=true&messsage=${message}`)
-        res.status(401);
-        throw new Error("This verification link doesn't exist.")
+        if(checkUser)
+            await checkUser.deleteOne();
+        res.status(500);
+        throw new Error("An error occurred. Please register again.")
+    }
+
+    // checkUser: NO
+    if(!checkUser) {
+        await checkUserVerification.deleteOne();
+        res.status(500);
+        throw new Error("An error occurred. Please register again.");
     }
 
     // checkUserVerification: YES
-    else {
-        const checkUser = await User.findById(userId);
-        
-        // checkUser: NO    checkUserVerification: YES
-        if(!checkUser) {
-            await checkUserVerification.deleteOne();
-            res.status(401);
-            throw new Error("An error occurred. Please register again.");
-        }
-        if(checkUser.verified == true) {
-            res.status(401);
-            throw new Error("This account was already verified. Please log in.");
+    if(checkUserVerification) {
         }
         if(checkUserVerification.expiredAt < Date.now()) {
             await checkUserVerification.deleteOne();
@@ -209,7 +181,7 @@ const verifyEmailLink = asyncHandler( async (req, res) => {
             });
         }
     }
-});
+);
 
 // @desc    Login a user
 // @route   /api/users/login

@@ -3,6 +3,7 @@ import {useSelector, useDispatch} from "react-redux";
 import {createNote, selectNoteSlice, reset} from "../features/notes/noteSlice";
 import Modal from "react-modal";
 import SpinnerComponent from "./SpinnerComponent";
+import {Button} from "@carbon/react";
 
 const customStyles = {
     content: {
@@ -57,7 +58,7 @@ const ModalComponent = ({ticketId, modalIsOpen, setModalIsOpen}) => {
                         onChange = {(event) => setNoteText(event.target.value)}></textarea>
                 </div>
                 <div className="form-group">
-                    <button className="btn" type="submit">Submit</button>
+                    <Button kind = "secondary" type="submit">Submit</Button>
                 </div>
             </form>
         </Modal>
