@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const userVerificationSchema = new Schema({
+const passwordResetRequestSchema = new Schema({
     user: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "User",
         unique: true
@@ -17,9 +17,9 @@ const userVerificationSchema = new Schema({
         required: true
     },
     expiredAt: {
-        type: Date, 
+        type: Date,
         required: true
     }
 });
 
-module.exports = mongoose.model("UserVerification", userVerificationSchema);
+module.exports = mongoose.model("PasswordResetRequest", passwordResetRequestSchema);
