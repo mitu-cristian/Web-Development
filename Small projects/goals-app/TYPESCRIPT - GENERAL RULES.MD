@@ -3,7 +3,7 @@
 ## General rules
 - **A variable can hold multiple knew values** 
 `let userID: string | number;`
-- **Custom object **
+- **Custom object**
 ```javascript
     let user: {
     	name: string,

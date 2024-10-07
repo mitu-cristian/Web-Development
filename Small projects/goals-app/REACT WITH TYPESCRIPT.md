@@ -37,7 +37,7 @@ export default function CourseGoal({title, description}: CourseGoalProps) {}
 	export default function CourseGoal({title, children, description}: CourseGoalProps) {}
 	```
 	- importing **PropsWithChildren**
-		```javascript
+    ```javascript
 	import {type PropsWithChildren} from "react";
 
 	type CourseGoalProps = PropsWithChildren<{
@@ -46,7 +46,7 @@ export default function CourseGoal({title, description}: CourseGoalProps) {}
 	}>
 
 		export default function CourseGoal({title, description, children}: CourseGoalProps) {}
-	```
+    ```
 
 - **2 types of props for a component** (when the mode is set to hint, we don't want to provide the severity, the severity will be provided only when mode is set to warning)
 	```javascript
@@ -90,7 +90,7 @@ export default function CourseGoal({title, description}: CourseGoalProps) {}
 
 - **use the same props for 2 components**
 	- App.tsx
-		```javascript
+    ```javascript
 	export type CourseGoal = {
 		title: string;
 		description: string;
@@ -100,9 +100,9 @@ export default function CourseGoal({title, description}: CourseGoalProps) {}
 	export default function App() {
 		const [goals, setGoals] = useState<CourseGoal[]>([]);
 	}
-	```
+    ```
 	- CourseGoalList.tsx
-		```javascript
+	```javascript
 	import {type CourseGoal as CourseGoalProps} from "../App.tsx";
 
 	type CourseGoalListProps = {
@@ -114,7 +114,7 @@ export default function CourseGoal({title, description}: CourseGoalProps) {}
 
 - **pass a function through multiple components**
 	- App.tsx
-		```javascript
+	```javascript
 	function handleDeleteGoal(id: number) {
 		setGoals(prevGoals => prevGoals.filter((goal) => goal.id !== id));
 	}
@@ -126,7 +126,7 @@ export default function CourseGoal({title, description}: CourseGoalProps) {}
 	)
 	```
 	- CourseGoalList.tsx
-		```javascript
+	```javascript
 	type CourseGoalListProps = {
 		goals: CourseGoalProps[];
 		onDeleteGoal: (id: number) => void;
@@ -150,7 +150,7 @@ export default function CourseGoal({title, description}: CourseGoalProps) {}
 	}
 	```
 	- CourseGoal.tsx
-		```javascript
+	```javascript
 	import {type PropsWithChildren} from "react";
 
 	type CourseGoalProps = PropsWithChildren<{
@@ -173,7 +173,7 @@ export default function CourseGoal({title, description}: CourseGoalProps) {}
 	}
 	```
 - **handle form inputs**
-```javascript
+    ```javascript
 	import {useRef, type FormEvent } from "react";
 
 	type NewGoalProps = {
