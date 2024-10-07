@@ -1,10 +1,9 @@
 # TypeScript
 
-------------
-
 ## General rules
-1. A variable can hold multiple knew values `let userID: string | number;`
-2. Custom object 
+- **A variable can hold multiple knew values** 
+`let userID: string | number;`
+- **Custom object **
 ```javascript
     let user: {
     	name: string,
@@ -13,18 +12,28 @@
     	id: string | number
     }
 ```
-3. Arrays `let hobbies: Array<string>` is the same thing as writting `let hobbies: string[]`
-4. Literal types `let role: "admin" | "user" | "editor" | 18`
-4.1. typeof - get the type of a variable 
-
-
+	- mark a field as optional using "?"
+```javascript
+    let user: {
+    	name: string,
+    	age?: number,
+    	isAdmin: boolean,
+    	id: string | number
+    }
+```
+- **Arrays** 
+`let hobbies: Array<string>` is the same thing as writting `let hobbies: string[]`
+- **Literal types** 
+`let role: "admin" | "user" | "editor" | 18`
+	- **typeof - get the type of a variable** 
+```javascript
     function performAction (action: string, role: Role) {
     	if(role === "admin" && typeof action === "string")
     }
-4.2. "something" in variable
+```
+	- **"something" in a variable**
 The below code will not work, the error received is: "User only refers to a type, but it is being used as a value".
-
-
+```javascript
     type User = {
         name: string;
         age: number;
@@ -41,17 +50,17 @@ The below code will not work, the error received is: "User only refers to a type
             
         }
     }
+```
 The solution is to replace the body of the login function with `if('permissions' in u) {}`
-5. Set the type of the parameters and the return value for a function `function add(a: number, b: number): void {}`
-6. Create custom types
-6.1. Type 
+-  **Set the type of the parameters and the return value for a functio**n `function add(a: number, b: number): void {}`
+- **Create custom types**
+	- **Type **
 ```javascript
 type StringOrNum = string | number;
 let value: StringOrNum = "abc";
 ```
-6.2. Interface
-
-
+	- **Interface**
+```javascript
     interface Credentials {
     	password: string,
     	email: string
@@ -62,22 +71,22 @@ let value: StringOrNum = "abc";
     	password: "abc",
     	email: "someone@gmail.com"
     }
-6.2.1. A class can implement an interface
-
-
+```
+		-  **A class can implement an interface**
+```javascript
     class AuthCredentials implements Credentials {
     	password: stirng;
     	email: string;
     	authType: "MFA"
     }
+```
 In case, there is a function like this: `function login(credentials: Credentials) {}`
 we can call it using 2 methods:
-- `login(creds)`
-- `login(new AuthCredentials())`
+			- `login(creds)`
+			- `login(new AuthCredentials())`
 
-7.Merge types
-
-
+-  **Merge types**
+```javascript
     type Admin = {
     	permissions: string[]
     }
@@ -111,10 +120,10 @@ we can call it using 2 methods:
     	permissions: [],
     	username: "admin"
     }
+```
 
-8.Generic types and functions
-
-
+-  **Generic types and functions**
+```javascript
     type DataStorage<T> = {
     	storage: T[];
     	add: (data: T) => void;
@@ -132,3 +141,4 @@ we can call it using 2 methods:
     }
     
     const user = merge<{name: string}, {age: number}>({name: "Cristian"}, {age: 24});
+```
